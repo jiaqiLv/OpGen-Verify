@@ -7,6 +7,7 @@ import json
 import tvm
 import random
 from os.path import join,exists
+import pandas as pd
 
 
 class CodeGen:
@@ -136,3 +137,21 @@ def write_ops_to_file(op_name, c_code, cuda_code, ir_code, op_args, save_file_pa
 
 def handle_timeout(signum, frame):
     raise TimeoutError("Execution timed out")
+
+def load_ops_from_txt(file_path):
+    ops_dict = {
+        'op':[],
+        'description':[]
+    }
+    with open(file_path,'r') as f:
+        for index,line in enumerate(f):
+            if index % 2 == 0 and index % 4 != 0:
+                ops_dict['description'].append(line.strip())
+            if index % 4 == 0:
+                ops_dict['op'].append(line.strip())
+    ops_df = pd.DataFrame(ops_dict)
+    ops_df.to_csv('/code/OpGen-Verify/code_generation/ops/topi_ops.csv',index=False)
+
+if __name__ == '__main__':
+    pass
+    # load_ops_from_txt('/code/OpGen-Verify/code_generation/ops/topi_ops.txt')
