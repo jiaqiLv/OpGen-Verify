@@ -152,6 +152,42 @@ def load_ops_from_txt(file_path):
     ops_df = pd.DataFrame(ops_dict)
     ops_df.to_csv('/code/OpGen-Verify/code_generation/ops/topi_ops.csv',index=False)
 
+def parse_func(func_str):
+    necessary_params = []
+    optional_params = []
+    assert len(func_str.split('(')) == 2
+    func_name = func_str.split('(')[0]
+    params_list = func_str.split('(')[-1][:-1]
+
+    if '[' in params_list and ']' in params_list:
+        optional_params_str = params_list.split('[')[-1][:-1]
+        optional_params = optional_params_str.split(',')
+        optional_params = [s.strip() for s in optional_params if s.strip() and '.' not in s]
+    else:
+        optional_params = []
+
+    if '[' in params_list and ']' in params_list:
+        necessary_params_str = params_list.split('[')[0]
+    else:
+        necessary_params_str = params_list
+    necessary_params = necessary_params_str.split(',')
+    necessary_params = [s.strip() for s in necessary_params if s.strip() and '.' not in s]
+    print(func_name,':',params_list,'|',necessary_params,'|',optional_params)
+    return func_name,necessary_params,optional_params
+
+
 if __name__ == '__main__':
-    pass
-    # load_ops_from_txt('/code/OpGen-Verify/code_generation/ops/topi_ops.txt')
+    ops_df = pd.read_csv('/code/OpGen-Verify/code_generation/ops/topi_ops.csv')
+    op_list = []
+    func_list = ops_df['op']
+    func_description = ops_df['description']
+    for func,description in zip(func_list,func_description):
+        func_name,necessary_params,optional_params = parse_func(func)
+        op_list.append({
+            'op_name':func_name,
+            'necessary_params':necessary_params,
+            'optional_params':optional_params,
+            'description':description
+        })
+    with open('/code/OpGen-Verify/code_generation/ops/topi_ops.json','w') as f:
+        json.dump(op_list,f,indent=4)
