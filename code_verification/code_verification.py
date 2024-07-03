@@ -9,7 +9,7 @@ from tvm import te,topi
 
 SOURCE_DIR = '/root/jiaqiLv/OpGen-Verify/code_generation/generate/c'
 TARGET_DIR = './ll'
-INCLUDE_DIRS = ['-I', '/root/codegen_tvm/tvm/include/', '-I', '/root/codegen_tvm/tvm/3rdparty/dlpack/include/']
+INCLUDE_DIRS = ['-I', '/root/tvm/include/', '-I', '/root/tvm/3rdparty/dlpack/include/']
 
 def parse_filename(filename):
     match = re.match(r'(\w+)\[(.*)\]', filename)
@@ -210,5 +210,5 @@ def execute_ll():
         print(failed_file)
 
 if __name__ == '__main__':
-    # generate_ll()
-    execute_ll()
+    generate_ll()
+    # execute_ll()

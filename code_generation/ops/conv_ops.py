@@ -24,9 +24,12 @@ def conv2d(N, H, W, CO, CI, KH, KW, stride, padding):
 
 @auto_scheduler.register_workload
 def conv1d(N, H, W, CO, CI, KH, KW, stride, padding):
-    data = te.placeholder((N,CI,W), name='data', dtype='float32')
-    kernel = te.placeholder((CO,KW,KW), name='kernel', dtype='float32')
+    data = te.placeholder((2,3,10), name='data', dtype='float32')
+    kernel = te.placeholder((5,3,3), name='kernel', dtype='float32')
     out = topi.nn.conv1d(data, kernel, strides=2, padding='VALID', dilation=1, data_layout='NCW')
+    # data = te.placeholder((N,CI,W), name='data', dtype='float32')
+    # kernel = te.placeholder((CO,CI,KW), name='kernel', dtype='float32')
+    # out = topi.nn.conv1d(data, kernel, strides=2, padding='VALID', dilation=1, data_layout='NCW')
     return [data, kernel, out]
 
 @auto_scheduler.register_workload
@@ -120,6 +123,6 @@ def group_conv1d_nwc(N, H, W, CO, CI, KH, KW, stride, padding):
 #     conv = topi.nn.group_conv2d_nchw(data, kernel, stride, padding, dilation=1,groups=1, out_dtype="float32")
 #     return [data, kernel, bias, conv]
 
-CONV_OPS_LIST = [conv2d_nchw,conv2d,conv1d,conv1d_ncw,conv1d_transpose_ncw,
+CONV_OPS_LIST = [conv1d,conv2d_nchw,conv2d,conv1d_ncw,conv1d_transpose_ncw,
                  conv2d_gemm_weight_transform,conv3d_ncdhw,conv3d_winograd_weight_transform,depthwise_conv2d_nchw,depthwise_conv2d_nhwc,
                  group_conv1d_ncw,group_conv1d_nwc]

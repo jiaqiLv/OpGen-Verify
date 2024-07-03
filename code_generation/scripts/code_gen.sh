@@ -1,4 +1,5 @@
-python code_gen.py \
-    --op_type conv \
-    --timeout 10 \
+python code_gen_single.py \
+    --op_type topi \
+    --op_name combination_op \
+    --timeout 1000 \
 

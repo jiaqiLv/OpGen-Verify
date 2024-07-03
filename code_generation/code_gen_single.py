@@ -47,12 +47,9 @@ def generate_single_code(ops,max_attempts=1):
 
 def generate_code():
     for ops in OP_TYPE_DICT[args.op_type]:
-        generate_single_code(ops)
+        if ops.__name__ == args.op_name:
+            generate_single_code(ops)
 
 
 if __name__ == '__main__':
-    # data = te.placeholder((2,3,10), name='data', dtype='float32')
-    # kernel = te.placeholder((5,3,3), name='kernel', dtype='float32')
-    # out = topi.nn.conv1d(data, kernel, strides=2, padding='VALID', dilation=1, data_layout='NCW')
-    # print(out)
     generate_code()

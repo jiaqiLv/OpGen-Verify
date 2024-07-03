@@ -354,7 +354,7 @@ def batch_matmul(batch, K,M,N):
 #     out = tvm.topi.nn.matmul(data_a, data_b)
 #     return [data_a,data_b,out]
 
-NN_OPS_LIST = [add,adaptive_pool_avg,adaptive_pool_max,fast_softmax,batch_to_space_nd,
+NN_OPS_LIST = [adaptive_pool_max,add,adaptive_pool_avg,fast_softmax,batch_to_space_nd,
                global_pool_max,global_pool_avg,dilate,flatten,fifo_buffer,
                conv2d_winograd_weight_transform,concatenate,depth_to_space,leaky_relu,log_softmax,
                lrn,mirror_pad,pad,pool1d,pool2d,

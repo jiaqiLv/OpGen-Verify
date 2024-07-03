@@ -22,10 +22,16 @@ class CodeGen:
         if op_args is None:
             raise ValueError("op_args must not be None and needs to be provided when c_codegen.")
 
+        # step1: assign search task
         target_c = tvm.target.Target("llvm")
         task_c = tvm.auto_scheduler.SearchTask(func=topi_ops, args=(*op_args, ), target=target_c)
 
+        os.makedirs(join(self.log_file_path,'c'),exist_ok=True)
         c_log_file_path = join(self.log_file_path,'c',f'{topi_ops.__name__}_c.log')
+        if exists(c_log_file_path):
+            with open(c_log_file_path,'w') as file:
+                pass
+
         tune_option = auto_scheduler.TuningOptions(
             num_measure_trials=self.search_time,
             measure_callbacks=[auto_scheduler.RecordToFile(c_log_file_path)],
@@ -53,6 +59,10 @@ class CodeGen:
         task_cuda = tvm.auto_scheduler.SearchTask(func=topi_ops, args=(*op_args, ), target=target_cuda)
 
         cuda_log_file_path = join(self.log_file_path,'cuda',f'{topi_ops.__name__}_cuda.log')
+        if exists(cuda_log_file_path):
+            with open(cuda_log_file_path,'w') as file:
+                pass
+
         tune_option = auto_scheduler.TuningOptions(
             num_measure_trials=self.search_time,
             measure_callbacks=[auto_scheduler.RecordToFile(cuda_log_file_path)],
@@ -83,6 +93,17 @@ class ArgsGen:
             return False
         
     def select_param(self,param_name):
+        """
+            N: batch size
+            H: height
+            W: width
+            CO: output channels
+            CI: input channels
+            KH: kernel height
+            KW: kernel width
+            stride: stride
+            padding: padding
+        """
         if param_name == 'CO' or param_name == 'CI':
             param_val = random.randint(10, 100)
         elif param_name == 'KH' or param_name == 'KW':

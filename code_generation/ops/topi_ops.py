@@ -1,8 +1,29 @@
+"""element wise ops with single input(Tensor)"""
 from tvm import (te,
                  auto_scheduler,
                  runtime,
                  topi)
+import random
+# element_wise_ops = ['abs']
+# @auto_scheduler.register_workload
+# def elemet_wise_op(N,C,H,W):
+#     data = te.placeholder((N,C,H,W), name="data", dtype="float32")
+#     exec(f'out = topi.{element_wise_ops[0]}(data)')
+#     return [data,out]
 
+@auto_scheduler.register_workload
+def asin_cos(N,C,H,W):
+    data = te.placeholder((N,C,H,W), name="data", dtype="float32")
+    # out = topi.sum(data)
+    out = topi.asin(data)
+    out = topi.cos(out)
+    return [data,out]
+
+@auto_scheduler.register_workload
+def abs(N,C, H, W):
+    data = te.placeholder((N,C,H,W), name="data", dtype="float32")
+    out = topi.sum(data)
+    return [data,out]
 
 @auto_scheduler.register_workload
 def sum(N,C, H, W):
@@ -300,9 +321,67 @@ def tile(N,C, H, W):
     out = topi.tile(data)
     return [data,out]
 
+"""test combination ops"""
 
-TOPI_OPS_LIST = [sum,cosh,cos,acos,asin,asinh,atan,atanh,ceil,clip,
+@auto_scheduler.register_workload
+def combination_op(N,C,H,W):
+    data_a = te.placeholder((N,C,H,W), name='data')
+    data_b = te.placeholder((N,C,H,W), name='data')
+    _data_a = topi.sqrt(data_a)
+    _data_b = topi.cos(data_b)
+    out = topi.nn.add(_data_a,_data_b)
+    return [data_a,data_b,out]
+
+@auto_scheduler.register_workload
+def multi_out_op(N,C,H,W):
+    data_a = te.placeholder((N,C,H,W), name='data')
+    data_b = te.placeholder((N,C,H,W), name='data')
+    out = topi.nn.add(data_a,data_b)
+    out_1 = topi.sqrt(out)
+    out_2 = topi.cos(out)
+    return [data_a,data_b,out_1,out_2]
+
+@auto_scheduler.register_workload
+def abs_simple(data):
+    out = topi.sum(data)
+    print(out)
+    return [data,out]
+
+
+TOPI_OPS_LIST = [multi_out_op,combination_op,abs_simple,
+                 abs,cos,atan,clip,asin_cos,sum,cosh,acos,asin,asinh,atanh,ceil,
                  const_vector,const_vector,const_vector,const_vector,erf,exp,fast_erf,fast_exp,fast_tanh,fixed_point_multiply,
                  flip,floor,full_like,isnan,log,log10,log2,max,min,negative,
                  prod,reinterpret,repeat,reshape,reshape,round,rsqrt,shape,sigmoid,sign,
                  sin,sinh,sqrt,tan,tanh,tile]
+
+def generate_new_function():
+    # 随机选择函数个数
+    # num_functions = random.randint(1, len(TOPI_OPS_LIST))
+    num_functions = 2
+    
+    # 随机选择函数
+    selected_functions = random.sample(TOPI_OPS_LIST, num_functions)
+
+    print(selected_functions)
+    
+    # 定义新函数
+    def new_function(N,C,H,W):
+        for idx,func in enumerate(selected_functions):
+            if idx == 0:
+                data,out = func(N,C,H,W)
+                print(data,out)
+            else:
+                data,out = func()
+        return [data,out]
+    
+    return new_function
+
+if __name__ == '__main__':
+    """test simple func"""
+    data = te.placeholder((12,23,34,45),name='data',dtype='float32')
+    func = abs_simple(data)
+    print(func)
+    """test combination ops"""
+    # new_func = generate_new_function()
+    # print(new_func(12,13,13,3))  # 输出新函数的结果
