@@ -42,7 +42,7 @@ class CodeGen:
         task_c.tune(tune_option)
 
         # Apply the best schedule
-        target_c = tvm.target.Target(target="c", host="llvm")
+        target_c = tvm.target.Target(target="c", host="c")
         sch, args = task_c.apply_best(c_log_file_path)
         c_module = tvm.build(sch, args, target_c)
         c_code = c_module.get_source()

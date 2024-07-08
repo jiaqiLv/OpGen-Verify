@@ -11,18 +11,18 @@ import random
 #     exec(f'out = topi.{element_wise_ops[0]}(data)')
 #     return [data,out]
 
-@auto_scheduler.register_workload
-def asin_cos(N,C,H,W):
-    data = te.placeholder((N,C,H,W), name="data", dtype="float32")
-    # out = topi.sum(data)
-    out = topi.asin(data)
-    out = topi.cos(out)
-    return [data,out]
+# @auto_scheduler.register_workload
+# def asin_cos(N,C,H,W):
+#     data = te.placeholder((N,C,H,W), name="data", dtype="float32")
+#     # out = topi.sum(data)
+#     out = topi.asin(data)
+#     out = topi.cos(out)
+#     return [data,out]
 
 @auto_scheduler.register_workload
-def abs(N,C, H, W):
-    data = te.placeholder((N,C,H,W), name="data", dtype="float32")
-    out = topi.sum(data)
+def abs(N,C,H,W):
+    data = te.placeholder((N,C,H,W),name='data',dtype='float32')
+    out = topi.abs(data)
     return [data,out]
 
 @auto_scheduler.register_workload
@@ -101,16 +101,14 @@ def const_vector(N,C, H, W):
     out = topi.const_vector(data)
     return [data,out]
     
-    
 
-    
 @auto_scheduler.register_workload
 def erf(N,C, H, W):
     data = te.placeholder((N,C,H,W), name="data", dtype="float32")
     out = topi.erf(data)
     return [data,out]
     
-    
+
 @auto_scheduler.register_workload
 def exp(N,C, H, W):
     data = te.placeholder((N,C,H,W), name="data", dtype="float32")
@@ -321,6 +319,14 @@ def tile(N,C, H, W):
     out = topi.tile(data)
     return [data,out]
 
+
+@auto_scheduler.register_workload
+def matmul(N,C,H,W):
+    data_a = te.placeholder((H,W),name="left_matrix",dtype='float32')
+    data_b = te.placeholder((W,H),name='right_matrix',dtype='float32')
+    out = topi.matmul(data_a,data_b)
+    return [data_a,data_b,out]
+
 """test combination ops"""
 
 @auto_scheduler.register_workload
@@ -348,8 +354,8 @@ def abs_simple(data):
     return [data,out]
 
 
-TOPI_OPS_LIST = [multi_out_op,combination_op,abs_simple,
-                 abs,cos,atan,clip,asin_cos,sum,cosh,acos,asin,asinh,atanh,ceil,
+TOPI_OPS_LIST = [matmul,multi_out_op,combination_op,abs_simple,
+                 abs,cos,atan,clip,sum,cosh,acos,asin,asinh,atanh,ceil,
                  const_vector,const_vector,const_vector,const_vector,erf,exp,fast_erf,fast_exp,fast_tanh,fixed_point_multiply,
                  flip,floor,full_like,isnan,log,log10,log2,max,min,negative,
                  prod,reinterpret,repeat,reshape,reshape,round,rsqrt,shape,sigmoid,sign,
