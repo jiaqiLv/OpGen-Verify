@@ -1,0 +1,12 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((19, 1, 20, 19), "float32"), gamma: T.Buffer((1,), "float32"), beta: T.Buffer((1,), "float32"), moving_mean: T.Buffer((1,), "float32"), moving_var: T.Buffer((1,), "float32"), T_divide: T.Buffer((19, 1, 20, 19), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0_ax1_fused_ax2_fused_ax3_fused in T.parallel(7220):
+            T_divide_1 = T.Buffer((7220,), data=T_divide.data)
+            data_1 = T.Buffer((7220,), data=data.data)
+            T_divide_1[ax0_ax1_fused_ax2_fused_ax3_fused] = (data_1[ax0_ax1_fused_ax2_fused_ax3_fused] - moving_mean[0]) / T.sqrt(moving_var[0] + T.float32(1.0000000000000001e-05))

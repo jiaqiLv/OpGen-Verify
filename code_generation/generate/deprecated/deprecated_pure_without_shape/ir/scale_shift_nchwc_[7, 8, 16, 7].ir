@@ -1,0 +1,17 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((7, 2, 16, 7, 8), "float32"), Scale: T.Buffer((2, 8), "float32"), Shift: T.Buffer((2, 8), "float32"), ScaleShift: T.Buffer((7, 2, 16, 7, 8), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for b_outer_outer_outer_cc_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_cb_outer_outer_outer_fused_b_outer_outer_inner_fused_cc_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused_cb_outer_outer_inner_fused in T.parallel(112):
+            for b_outer_inner, cc_outer_inner, i_outer_inner, i_inner in T.grid(7, 2, 4, 2):
+                cse_var_2: T.int32 = cc_outer_inner * 8 + b_outer_outer_outer_cc_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_cb_outer_outer_outer_fused_b_outer_outer_inner_fused_cc_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused_cb_outer_outer_inner_fused % 8
+                cse_var_1: T.int32 = b_outer_inner * 1792 + cc_outer_inner * 896 + b_outer_outer_outer_cc_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_cb_outer_outer_outer_fused_b_outer_outer_inner_fused_cc_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused_cb_outer_outer_inner_fused // 56 * 448 + i_outer_inner * 112 + i_inner * 56 + b_outer_outer_outer_cc_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_cb_outer_outer_outer_fused_b_outer_outer_inner_fused_cc_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused_cb_outer_outer_inner_fused % 56
+                ScaleShift_1 = T.Buffer((12544,), data=ScaleShift.data)
+                data_1 = T.Buffer((12544,), data=data.data)
+                Scale_1 = T.Buffer((16,), data=Scale.data)
+                Shift_1 = T.Buffer((16,), data=Shift.data)
+                ScaleShift_1[cse_var_1] = data_1[cse_var_1] * Scale_1[cse_var_2] + Shift_1[cse_var_2]

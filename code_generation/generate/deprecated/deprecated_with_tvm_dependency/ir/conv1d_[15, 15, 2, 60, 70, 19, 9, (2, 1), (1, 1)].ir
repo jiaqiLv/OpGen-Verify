@@ -1,0 +1,28 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((2, 3, 10), "float32"), kernel: T.Buffer((5, 3, 3), "float32"), conv1d_ncw: T.Buffer((2, 5, 4), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for nn_outer_outer_outer_ff_outer_outer_outer_fused_yy_outer_outer_outer_fused_nn_outer_outer_inner_fused_ff_outer_outer_inner_fused_yy_outer_outer_inner_fused in T.parallel(40):
+            cse_var_6: T.int32 = nn_outer_outer_outer_ff_outer_outer_outer_fused_yy_outer_outer_outer_fused_nn_outer_outer_inner_fused_ff_outer_outer_inner_fused_yy_outer_outer_inner_fused // 20
+            cse_var_5: T.int32 = nn_outer_outer_outer_ff_outer_outer_outer_fused_yy_outer_outer_outer_fused_nn_outer_outer_inner_fused_ff_outer_outer_inner_fused_yy_outer_outer_inner_fused % 5
+            cse_var_4: T.int32 = nn_outer_outer_outer_ff_outer_outer_outer_fused_yy_outer_outer_outer_fused_nn_outer_outer_inner_fused_ff_outer_outer_inner_fused_yy_outer_outer_inner_fused % 20 // 5
+            cse_var_3: T.int32 = cse_var_5 * 9
+            cse_var_2: T.int32 = cse_var_6 * 30 + cse_var_4 * 2
+            cse_var_1: T.int32 = cse_var_6 * 20 + cse_var_5 * 4 + cse_var_4
+            conv1d_ncw_1 = T.Buffer((40,), data=conv1d_ncw.data)
+            conv1d_ncw_1[cse_var_1] = T.float32(0)
+            data_1 = T.Buffer((60,), data=data.data)
+            kernel_1 = T.Buffer((45,), data=kernel.data)
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2] * kernel_1[cse_var_3]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 1] * kernel_1[cse_var_3 + 1]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 2] * kernel_1[cse_var_3 + 2]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 10] * kernel_1[cse_var_3 + 3]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 11] * kernel_1[cse_var_3 + 4]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 12] * kernel_1[cse_var_3 + 5]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 20] * kernel_1[cse_var_3 + 6]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 21] * kernel_1[cse_var_3 + 7]
+            conv1d_ncw_1[cse_var_1] = conv1d_ncw_1[cse_var_1] + data_1[cse_var_2 + 22] * kernel_1[cse_var_3 + 8]

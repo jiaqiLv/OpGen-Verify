@@ -1,6 +1,5 @@
 from collections import defaultdict
 import random
-from re import L
 from tvm import (
     te,
     auto_scheduler,

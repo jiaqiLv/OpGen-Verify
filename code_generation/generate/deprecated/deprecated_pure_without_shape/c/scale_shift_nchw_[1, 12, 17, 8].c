@@ -1,0 +1,11 @@
+void default_function_kernel(float* Scale, float* ScaleShift, float* Shift, float* data) {
+  #pragma omp parallel for
+  for (int32_t b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused = 0; b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused < 16; ++b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused) {
+    for (int32_t c_inner = 0; c_inner < 6; ++c_inner) {
+      for (int32_t i_inner = 0; i_inner < 17; ++i_inner) {
+        ScaleShift[(((((b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused >> 3) * 816) + (c_inner * 136)) + (i_inner * 8)) + (b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused & 7))] = ((data[(((((b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused >> 3) * 816) + (c_inner * 136)) + (i_inner * 8)) + (b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused & 7))] * Scale[(((b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused >> 3) * 6) + c_inner)]) + Shift[(((b_outer_outer_outer_c_outer_outer_outer_fused_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_c_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused >> 3) * 6) + c_inner)]);
+      }
+    }
+  }
+}
+

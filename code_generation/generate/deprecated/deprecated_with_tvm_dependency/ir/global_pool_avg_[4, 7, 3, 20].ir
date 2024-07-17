@@ -1,0 +1,77 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((4, 7, 3, 20), "float32"), adaptive_pool_avg: T.Buffer((4, 7, 1, 1), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0 in T.parallel(4):
+            adaptive_pool_sum = T.allocate([1], "float32", "global")
+            for ax1 in range(7):
+                cse_var_1: T.int32 = ax0 * 420 + ax1 * 60
+                adaptive_pool_sum_1 = T.Buffer((1,), data=adaptive_pool_sum, align=4)
+                adaptive_pool_sum_1[0] = T.float32(0)
+                data_1 = T.Buffer((1680,), data=data.data)
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 1]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 2]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 3]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 4]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 5]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 6]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 7]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 8]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 9]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 10]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 11]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 12]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 13]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 14]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 15]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 16]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 17]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 18]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 19]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 20]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 21]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 22]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 23]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 24]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 25]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 26]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 27]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 28]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 29]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 30]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 31]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 32]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 33]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 34]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 35]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 36]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 37]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 38]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 39]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 40]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 41]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 42]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 43]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 44]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 45]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 46]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 47]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 48]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 49]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 50]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 51]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 52]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 53]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 54]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 55]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 56]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 57]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 58]
+                adaptive_pool_sum_1[0] = adaptive_pool_sum_1[0] + data_1[cse_var_1 + 59]
+                adaptive_pool_avg_1 = T.Buffer((28,), data=adaptive_pool_avg.data)
+                adaptive_pool_avg_1[ax0 * 7 + ax1] = adaptive_pool_sum_1[0] * T.float32(0.016666666666666666)

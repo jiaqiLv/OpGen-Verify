@@ -1,0 +1,43 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((17, 16, 6, 6), "float32"), transform_weight: T.Buffer((7, 7, 17, 16), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for eps_outer_outer_outer_nu_outer_outer_outer_fused_co_outer_outer_outer_fused_ci_outer_outer_outer_fused_eps_outer_outer_inner_fused_nu_outer_outer_inner_fused_co_outer_outer_inner_fused_ci_outer_outer_inner_fused in T.parallel(272):
+            transform_weight_1 = T.Buffer((13328,), data=transform_weight.data)
+            for nu_outer_inner_init, eps_inner_init in T.grid(7, 7):
+                transform_weight_1[eps_inner_init * 1904 + nu_outer_inner_init * 272 + eps_outer_outer_outer_nu_outer_outer_outer_fused_co_outer_outer_outer_fused_ci_outer_outer_outer_fused_eps_outer_outer_inner_fused_nu_outer_outer_inner_fused_co_outer_outer_inner_fused_ci_outer_outer_inner_fused] = T.float32(0)
+            for r_kh_outer, r_kw_outer, nu_outer_inner, r_kh_inner, eps_inner in T.grid(2, 6, 7, 3, 7):
+                cse_var_28: T.int32 = r_kh_outer * 3 + r_kh_inner
+                cse_var_27: T.bool = nu_outer_inner == 0
+                cse_var_26: T.bool = nu_outer_inner == 1
+                cse_var_25: T.bool = nu_outer_inner == 2
+                cse_var_24: T.bool = nu_outer_inner == 3
+                cse_var_23: T.bool = nu_outer_inner == 4
+                cse_var_22: T.bool = nu_outer_inner == 5
+                cse_var_21: T.bool = r_kw_outer == 0
+                cse_var_20: T.bool = r_kw_outer == 1
+                cse_var_19: T.bool = r_kw_outer == 2
+                cse_var_18: T.bool = r_kw_outer == 3
+                cse_var_17: T.bool = r_kw_outer == 4
+                cse_var_16: T.bool = r_kw_outer == 5
+                cse_var_15: T.bool = nu_outer_inner == 6
+                cse_var_14: T.bool = eps_inner == 0
+                cse_var_13: T.bool = eps_inner == 1
+                cse_var_12: T.bool = eps_inner == 2
+                cse_var_11: T.bool = eps_inner == 3
+                cse_var_10: T.bool = eps_inner == 4
+                cse_var_9: T.bool = eps_inner == 5
+                cse_var_8: T.bool = eps_inner == 6
+                cse_var_7: T.bool = cse_var_28 == 0
+                cse_var_6: T.bool = cse_var_28 == 1
+                cse_var_5: T.bool = cse_var_28 == 2
+                cse_var_4: T.bool = cse_var_28 == 3
+                cse_var_3: T.bool = cse_var_28 == 4
+                cse_var_2: T.bool = cse_var_28 == 5
+                cse_var_1: T.int32 = eps_inner * 1904 + nu_outer_inner * 272 + eps_outer_outer_outer_nu_outer_outer_outer_fused_co_outer_outer_outer_fused_ci_outer_outer_outer_fused_eps_outer_outer_inner_fused_nu_outer_outer_inner_fused_co_outer_outer_inner_fused_ci_outer_outer_inner_fused
+                data_1 = T.Buffer((9792,), data=data.data)
+                transform_weight_1[cse_var_1] = transform_weight_1[cse_var_1] + data_1[eps_outer_outer_outer_nu_outer_outer_outer_fused_co_outer_outer_outer_fused_ci_outer_outer_outer_fused_eps_outer_outer_inner_fused_nu_outer_outer_inner_fused_co_outer_outer_inner_fused_ci_outer_outer_inner_fused * 36 + r_kh_outer * 18 + r_kh_inner * 6 + r_kw_outer] * T.Select(cse_var_8 and cse_var_2, T.float32(1), T.Select(cse_var_8 and cse_var_3, T.float32(0), T.Select(cse_var_8 and cse_var_4, T.float32(0), T.Select(cse_var_8 and cse_var_5, T.float32(0), T.Select(cse_var_8 and cse_var_6, T.float32(0), T.Select(cse_var_8 and cse_var_7, T.float32(0), T.Select(cse_var_9 and cse_var_2, T.float32(0.0555555559694767), T.Select(cse_var_9 and cse_var_3, T.float32(-0.1111111119389534), T.Select(cse_var_9 and cse_var_4, T.float32(0.2222222238779068), T.Select(cse_var_9 and cse_var_5, T.float32(-0.4444444477558136), T.Select(cse_var_9 and cse_var_6, T.float32(0.8888888955116272), T.Select(cse_var_9 and cse_var_7, T.float32(-1.7777777910232544), T.Select(cse_var_10 and cse_var_2, T.float32(1.4222222566604614), T.Select(cse_var_10 and cse_var_3, T.float32(-0.71111112833023071), T.Select(cse_var_10 and cse_var_4, T.float32(0.35555556416511536), T.Select(cse_var_10 and cse_var_5, T.float32(-0.17777778208255768), T.Select(cse_var_10 and cse_var_6, T.float32(0.088888891041278839), T.Select(cse_var_10 and cse_var_7, T.float32(-0.04444444552063942), T.Select(cse_var_11 and cse_var_2, T.float32(-0.033333335071802139), T.Select(cse_var_11 and cse_var_3, T.float32(-0.066666670143604279), T.Select(cse_var_11 and cse_var_4, T.float32(-0.13333334028720856), T.Select(cse_var_11 and cse_var_5, T.float32(-0.26666668057441711), T.Select(cse_var_11 and cse_var_6, T.float32(-0.53333336114883423), T.Select(cse_var_11 and cse_var_7, T.float32(-1.0666667222976685), T.Select(cse_var_12 and cse_var_2, T.float32(0.2222222238779068), T.Select(cse_var_12 and cse_var_3, T.float32(0.2222222238779068), T.Select(cse_var_12 and cse_var_4, T.float32(0.2222222238779068), T.Select(cse_var_12 and cse_var_5, T.float32(0.2222222238779068), T.Select(cse_var_12 and cse_var_6, T.float32(0.2222222238779068), T.Select(cse_var_12 and cse_var_7, T.float32(0.2222222238779068), T.Select(cse_var_13 and cse_var_2, T.float32(-0.66666668653488159), T.Select(cse_var_13 and cse_var_3, T.float32(0.66666668653488159), T.Select(cse_var_13 and cse_var_4, T.float32(-0.66666668653488159), T.Select(cse_var_13 and cse_var_5, T.float32(0.66666668653488159), T.Select(cse_var_13 and cse_var_6, T.float32(-0.66666668653488159), T.Select(cse_var_13 and cse_var_7, T.float32(0.66666668653488159), T.Select(cse_var_14 and cse_var_2, T.float32(0), T.Select(cse_var_14 and cse_var_3, T.float32(0), T.Select(cse_var_14 and cse_var_4, T.float32(0), T.Select(cse_var_14 and cse_var_5, T.float32(0), T.Select(cse_var_14 and cse_var_6, T.float32(0), T.Select(cse_var_14 and cse_var_7, T.float32(2), T.float32(0))))))))))))))))))))))))))))))))))))))))))) * T.Select(cse_var_15 and cse_var_16, T.float32(1), T.Select(cse_var_15 and cse_var_17, T.float32(0), T.Select(cse_var_15 and cse_var_18, T.float32(0), T.Select(cse_var_15 and cse_var_19, T.float32(0), T.Select(cse_var_15 and cse_var_20, T.float32(0), T.Select(cse_var_15 and cse_var_21, T.float32(0), T.Select(cse_var_22 and cse_var_16, T.float32(0.0555555559694767), T.Select(cse_var_22 and cse_var_17, T.float32(-0.1111111119389534), T.Select(cse_var_22 and cse_var_18, T.float32(0.2222222238779068), T.Select(cse_var_22 and cse_var_19, T.float32(-0.4444444477558136), T.Select(cse_var_22 and cse_var_20, T.float32(0.8888888955116272), T.Select(cse_var_22 and cse_var_21, T.float32(-1.7777777910232544), T.Select(cse_var_23 and cse_var_16, T.float32(1.4222222566604614), T.Select(cse_var_23 and cse_var_17, T.float32(-0.71111112833023071), T.Select(cse_var_23 and cse_var_18, T.float32(0.35555556416511536), T.Select(cse_var_23 and cse_var_19, T.float32(-0.17777778208255768), T.Select(cse_var_23 and cse_var_20, T.float32(0.088888891041278839), T.Select(cse_var_23 and cse_var_21, T.float32(-0.04444444552063942), T.Select(cse_var_24 and cse_var_16, T.float32(-0.033333335071802139), T.Select(cse_var_24 and cse_var_17, T.float32(-0.066666670143604279), T.Select(cse_var_24 and cse_var_18, T.float32(-0.13333334028720856), T.Select(cse_var_24 and cse_var_19, T.float32(-0.26666668057441711), T.Select(cse_var_24 and cse_var_20, T.float32(-0.53333336114883423), T.Select(cse_var_24 and cse_var_21, T.float32(-1.0666667222976685), T.Select(cse_var_25 and cse_var_16, T.float32(0.2222222238779068), T.Select(cse_var_25 and cse_var_17, T.float32(0.2222222238779068), T.Select(cse_var_25 and cse_var_18, T.float32(0.2222222238779068), T.Select(cse_var_25 and cse_var_19, T.float32(0.2222222238779068), T.Select(cse_var_25 and cse_var_20, T.float32(0.2222222238779068), T.Select(cse_var_25 and cse_var_21, T.float32(0.2222222238779068), T.Select(cse_var_26 and cse_var_16, T.float32(-0.66666668653488159), T.Select(cse_var_26 and cse_var_17, T.float32(0.66666668653488159), T.Select(cse_var_26 and cse_var_18, T.float32(-0.66666668653488159), T.Select(cse_var_26 and cse_var_19, T.float32(0.66666668653488159), T.Select(cse_var_26 and cse_var_20, T.float32(-0.66666668653488159), T.Select(cse_var_26 and cse_var_21, T.float32(0.66666668653488159), T.Select(cse_var_27 and cse_var_16, T.float32(0), T.Select(cse_var_27 and cse_var_17, T.float32(0), T.Select(cse_var_27 and cse_var_18, T.float32(0), T.Select(cse_var_27 and cse_var_19, T.float32(0), T.Select(cse_var_27 and cse_var_20, T.float32(0), T.Select(cse_var_27 and cse_var_21, T.float32(2), T.float32(0)))))))))))))))))))))))))))))))))))))))))))

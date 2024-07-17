@@ -1,0 +1,29 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((5, 16, 14, 14), "float32"), compute: T.Buffer((5, 16, 14, 14), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused in T.parallel(4):
+            T_softmax_maxelem = T.allocate([280], "float32", "global")
+            compute_1 = T.allocate([280], "float32", "global")
+            T_softmax_maxelem_1 = T.Buffer((280,), data=T_softmax_maxelem)
+            data_1 = T.Buffer((15680,), data=data.data)
+            for i0, i1, i2 in T.grid(5, 8, 7):
+                T_softmax_maxelem_1[i0 * 56 + i1 * 7 + i2] = T.float32(-3.4028234663852886e+38)
+                for k in range(14):
+                    cse_var_1: T.int32 = i0 * 56 + i1 * 7 + i2
+                    T_softmax_maxelem_1[cse_var_1] = T.max(T_softmax_maxelem_1[cse_var_1], data_1[i0 * 3136 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused // 2 * 1568 + i1 * 196 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused % 2 * 98 + i2 * 14 + k])
+            compute_2 = T.Buffer((280,), data=compute_1)
+            for i0, i1, i2 in T.grid(5, 8, 7):
+                compute_2[i0 * 56 + i1 * 7 + i2] = T.float32(0)
+                for k in range(14):
+                    cse_var_2: T.int32 = i0 * 56 + i1 * 7 + i2
+                    compute_2[cse_var_2] = compute_2[cse_var_2] + T.exp(data_1[i0 * 3136 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused // 2 * 1568 + i1 * 196 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused % 2 * 98 + i2 * 14 + k] - T_softmax_maxelem_1[cse_var_2])
+            for i3_outer_outer_inner, i1_outer_inner, i0_inner, i2_inner in T.grid(14, 8, 5, 7):
+                cse_var_4: T.int32 = i0_inner * 56 + i1_outer_inner * 7 + i2_inner
+                cse_var_3: T.int32 = i0_inner * 3136 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused // 2 * 1568 + i1_outer_inner * 196 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused % 2 * 98 + i2_inner * 14 + i3_outer_outer_inner
+                compute_3 = T.Buffer((15680,), data=compute.data)
+                compute_3[cse_var_3] = data_1[cse_var_3] - T_softmax_maxelem_1[cse_var_4] - T.log(compute_2[cse_var_4])

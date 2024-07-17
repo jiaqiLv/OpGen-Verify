@@ -1,0 +1,22 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((4, 20, 18, 9), "float32"), gamma: T.Buffer((20,), "float32"), beta: T.Buffer((20,), "float32"), moving_mean: T.Buffer((20,), "float32"), moving_var: T.Buffer((20,), "float32"), T_divide: T.Buffer((4, 20, 18, 9), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0 in T.parallel(4):
+            T_reshape = T.allocate([20], "float32", "global")
+            T_reshape_1 = T.allocate([20], "float32", "global")
+            T_reshape_2 = T.Buffer((20,), data=T_reshape)
+            for ax1 in range(20):
+                T_reshape_2[ax1] = moving_mean[ax1]
+            T_reshape_3 = T.Buffer((20,), data=T_reshape_1)
+            for ax1 in range(20):
+                T_reshape_3[ax1] = moving_var[ax1]
+            for ax1, ax2, ax3 in T.grid(20, 18, 9):
+                cse_var_1: T.int32 = ax0 * 3240 + ax1 * 162 + ax2 * 9 + ax3
+                T_divide_1 = T.Buffer((12960,), data=T_divide.data)
+                data_1 = T.Buffer((12960,), data=data.data)
+                T_divide_1[cse_var_1] = (data_1[cse_var_1] - T_reshape_2[ax1]) / T.sqrt(T_reshape_3[ax1] + T.float32(1.0000000000000001e-05))

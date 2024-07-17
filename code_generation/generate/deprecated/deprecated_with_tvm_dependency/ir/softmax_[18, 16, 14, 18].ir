@@ -1,0 +1,66 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((18, 16, 14, 18), "float32"), T_softmax_norm: T.Buffer((18, 16, 14, 18), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for i0 in T.parallel(18):
+            T_softmax_exp = T.allocate([4032], "float32", "global")
+            T_softmax_maxelem = T.allocate([1], "float32", "global")
+            T_softmax_expsum = T.allocate([14], "float32", "global")
+            T_softmax_exp_1 = T.Buffer((4032,), data=T_softmax_exp)
+            for i1, i2 in T.grid(16, 14):
+                cse_var_1: T.int32 = i0 * 4032 + i1 * 252 + i2 * 18
+                T_softmax_maxelem_1 = T.Buffer((1,), data=T_softmax_maxelem, align=4)
+                T_softmax_maxelem_1[0] = T.float32(-3.4028234663852886e+38)
+                data_1 = T.Buffer((72576,), data=data.data)
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 1])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 2])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 3])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 4])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 5])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 6])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 7])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 8])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 9])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 10])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 11])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 12])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 13])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 14])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 15])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 16])
+                T_softmax_maxelem_1[0] = T.max(T_softmax_maxelem_1[0], data_1[cse_var_1 + 17])
+                for i3 in range(18):
+                    T_softmax_exp_1[i1 * 252 + i2 * 18 + i3] = T.exp(data_1[cse_var_1 + i3] - T_softmax_maxelem_1[0])
+            for i1 in range(16):
+                T_softmax_expsum_1 = T.Buffer((14,), data=T_softmax_expsum, align=32)
+                for i2 in range(14):
+                    cse_var_2: T.int32 = i1 * 252 + i2 * 18
+                    T_softmax_expsum_1[i2] = T.float32(0)
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 1]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 2]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 3]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 4]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 5]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 6]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 7]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 8]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 9]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 10]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 11]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 12]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 13]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 14]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 15]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 16]
+                    T_softmax_expsum_1[i2] = T_softmax_expsum_1[i2] + T_softmax_exp_1[cse_var_2 + 17]
+                for i2, i3 in T.grid(14, 18):
+                    cse_var_4: T.int32 = i1 * 252
+                    cse_var_3: T.int32 = i2 * 18
+                    T_softmax_norm_1 = T.Buffer((72576,), data=T_softmax_norm.data)
+                    T_softmax_norm_1[i0 * 4032 + cse_var_4 + cse_var_3 + i3] = T_softmax_exp_1[cse_var_4 + cse_var_3 + i3] / T_softmax_expsum_1[i2]

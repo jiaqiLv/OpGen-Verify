@@ -1,0 +1,4 @@
+extern "C" __global__ void __launch_bounds__(36) default_function_kernel(float* __restrict__ MirrorPadInput, float* __restrict__ data) {
+  MirrorPadInput[((((int)blockIdx.x) * 36) + ((int)threadIdx.x))] = data[((((88 <= ((((int)blockIdx.x) * 9) + (((int)threadIdx.x) >> 2))) ? (30 - (((((int)blockIdx.x) * 18) + (((int)threadIdx.x) >> 1)) / 11)) : ((((((int)blockIdx.x) * 18) + (((int)threadIdx.x) >> 1)) < 11) ? 0 : ((((((int)blockIdx.x) * 18) + (((int)threadIdx.x) >> 1)) / 11) - 1))) * 19) + (((((((int)blockIdx.x) * 14) + ((int)threadIdx.x)) % 22) == 21) ? (39 - (((((int)blockIdx.x) * 14) + ((int)threadIdx.x)) % 22)) : (((((((int)blockIdx.x) * 7) + (((int)threadIdx.x) >> 1)) % 11) < 1) ? (1 - (((((int)blockIdx.x) * 14) + ((int)threadIdx.x)) % 22)) : ((((((int)blockIdx.x) * 14) + ((int)threadIdx.x)) % 22) - 2))))];
+}
+

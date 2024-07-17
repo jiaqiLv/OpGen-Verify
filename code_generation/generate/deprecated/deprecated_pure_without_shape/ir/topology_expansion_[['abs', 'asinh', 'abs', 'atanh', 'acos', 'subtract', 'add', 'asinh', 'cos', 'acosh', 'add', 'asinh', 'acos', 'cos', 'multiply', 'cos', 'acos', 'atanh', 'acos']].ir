@@ -1,0 +1,53 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(ph_0: T.Buffer((4, 18, 9), "float32"), compute: T.Buffer((4, 18, 9), "float32"), T_subtract: T.Buffer((4, 18, 9), "float32"), T_add: T.Buffer((4, 18, 9), "float32"), compute_1: T.Buffer((4, 18, 9), "float32"), compute_2: T.Buffer((4, 18, 9), "float32"), T_add_1: T.Buffer((4, 18, 9), "float32"), compute_3: T.Buffer((4, 18, 9), "float32"), compute_4: T.Buffer((4, 18, 9), "float32"), compute_5: T.Buffer((4, 18, 9), "float32"), T_multiply: T.Buffer((4, 18, 9), "float32"), compute_6: T.Buffer((4, 18, 9), "float32"), compute_7: T.Buffer((4, 18, 9), "float32"), compute_8: T.Buffer((4, 18, 9), "float32"), compute_9: T.Buffer((4, 18, 9), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        ph_0_1 = T.Buffer((648,), data=ph_0.data)
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute.data)
+            compute_10[i0_i1_fused_i2_fused] = T.atanh(ph_0_1[i0_i1_fused_i2_fused])
+        for ax0_ax1_fused_ax2_fused in T.parallel(648):
+            T_subtract_1 = T.Buffer((648,), data=T_subtract.data)
+            T_subtract_1[ax0_ax1_fused_ax2_fused] = T.acos(ph_0_1[ax0_ax1_fused_ax2_fused]) - ph_0_1[ax0_ax1_fused_ax2_fused]
+        for ax0_ax1_fused_ax2_fused in T.parallel(648):
+            T_add_2 = T.Buffer((648,), data=T_add.data)
+            T_add_2[ax0_ax1_fused_ax2_fused] = T.acos(ph_0_1[ax0_ax1_fused_ax2_fused]) + ph_0_1[ax0_ax1_fused_ax2_fused]
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_1.data)
+            compute_10[i0_i1_fused_i2_fused] = T.asinh(T.fabs(ph_0_1[i0_i1_fused_i2_fused]))
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_2.data)
+            compute_10[i0_i1_fused_i2_fused] = T.cos(T.fabs(ph_0_1[i0_i1_fused_i2_fused]))
+        for ax0_ax1_fused_ax2_fused in T.parallel(648):
+            T_add_2 = T.Buffer((648,), data=T_add_1.data)
+            T_add_2[ax0_ax1_fused_ax2_fused] = T.acosh(T.fabs(ph_0_1[ax0_ax1_fused_ax2_fused])) + T.fabs(ph_0_1[ax0_ax1_fused_ax2_fused])
+        for i0 in T.parallel(4):
+            for i1, i2 in T.grid(18, 9):
+                cse_var_1: T.int32 = i0 * 162 + i1 * 9 + i2
+                compute_10 = T.Buffer((648,), data=compute_3.data)
+                compute_10[cse_var_1] = T.asinh(T.acosh(T.fabs(ph_0_1[cse_var_1])))
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_4.data)
+            compute_10[i0_i1_fused_i2_fused] = T.acos(T.acosh(T.fabs(ph_0_1[i0_i1_fused_i2_fused])))
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_5.data)
+            compute_10[i0_i1_fused_i2_fused] = T.cos(T.acosh(T.fabs(ph_0_1[i0_i1_fused_i2_fused])))
+        for ax0_ax1_fused_ax2_fused in T.parallel(648):
+            T_multiply_1 = T.Buffer((648,), data=T_multiply.data)
+            T_multiply_1[ax0_ax1_fused_ax2_fused] = T.acosh(T.fabs(ph_0_1[ax0_ax1_fused_ax2_fused])) * T.fabs(ph_0_1[ax0_ax1_fused_ax2_fused])
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_6.data)
+            compute_10[i0_i1_fused_i2_fused] = T.cos(T.fabs(T.asinh(ph_0_1[i0_i1_fused_i2_fused])))
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_7.data)
+            compute_10[i0_i1_fused_i2_fused] = T.acos(T.fabs(T.asinh(ph_0_1[i0_i1_fused_i2_fused])))
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_8.data)
+            compute_10[i0_i1_fused_i2_fused] = T.atanh(T.fabs(T.asinh(ph_0_1[i0_i1_fused_i2_fused])))
+        for i0_i1_fused_i2_fused in T.parallel(648):
+            compute_10 = T.Buffer((648,), data=compute_9.data)
+            compute_10[i0_i1_fused_i2_fused] = T.acos(T.fabs(T.asinh(ph_0_1[i0_i1_fused_i2_fused])))

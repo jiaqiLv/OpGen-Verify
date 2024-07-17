@@ -1,0 +1,27 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((4, 19, 1, 13), "float32"), adaptive_pool_avg: T.Buffer((4, 19, 8, 8), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        adaptive_pool_sum = T.allocate([4864], "float32", "global")
+        adaptive_pool_sum_1 = T.Buffer((4864,), data=adaptive_pool_sum)
+        for ax0_ax1_fused in T.parallel(76):
+            for ax2, ax3 in T.grid(8, 8):
+                adaptive_pool_sum_1[ax0_ax1_fused * 64 + ax2 * 8 + ax3] = T.float32(0)
+                for rv0, rv1 in T.grid(T.Let(T.Select((ax2 + 1) % 8 == 0, cse_var_1, cse_var_1 + 1), where={cse_var_1: (ax2 + 1) // 8}), T.Let(T.Select((ax3 * 5 + 5) % 8 == 0, cse_var_2, cse_var_2 + 1) - ax3 * 13 // 8, where={cse_var_2: (ax3 * 13 + 13) // 8})):
+                    cse_var_1 = T.int32()
+                    cse_var_2 = T.int32()
+                    cse_var_3: T.int32 = ax0_ax1_fused * 64 + ax2 * 8 + ax3
+                    data_1 = T.Buffer((988,), data=data.data)
+                    adaptive_pool_sum_1[cse_var_3] = adaptive_pool_sum_1[cse_var_3] + data_1[ax0_ax1_fused * 13 + rv0 * 13 + ax3 * 13 // 8 + rv1]
+        for ax0_ax1_fused_ax2_fused_ax3_fused in T.parallel(4864):
+            cse_var_7: T.int32 = ax0_ax1_fused_ax2_fused_ax3_fused % 64
+            cse_var_6: T.int32 = ax0_ax1_fused_ax2_fused_ax3_fused % 8
+            cse_var_8: T.int32 = cse_var_6 * 13
+            cse_var_5: T.int32 = (cse_var_7 + 8) // 64
+            cse_var_4: T.int32 = (cse_var_8 + 13) // 8
+            adaptive_pool_avg_1 = T.Buffer((4864,), data=adaptive_pool_avg.data)
+            adaptive_pool_avg_1[ax0_ax1_fused_ax2_fused_ax3_fused] = adaptive_pool_sum_1[ax0_ax1_fused_ax2_fused_ax3_fused] / (T.Cast("float32", T.Select((cse_var_7 // 8 + 1) % 8 == 0, cse_var_5, cse_var_5 + 1)) * T.Cast("float32", T.Select((cse_var_6 * 5 + 5) % 8 == 0, cse_var_4, cse_var_4 + 1) - cse_var_8 // 8))

@@ -1,0 +1,25 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((14, 9, 17, 16), "float32"), weight: T.Buffer((16,), "float32"), T_cast: T.Buffer((14, 9, 17, 16), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0 in T.parallel(14):
+            T_multiply_red = T.allocate([272], "float32", "global")
+            for ax1 in range(9):
+                T_multiply_red_1 = T.Buffer((272,), data=T_multiply_red)
+                data_1 = T.Buffer((34272,), data=data.data)
+                for ax1_1, ax2 in T.grid(17, 16):
+                    T_multiply_red_1[ax1_1 * 16 + ax2] = T.float32(0)
+                    for k1 in range(9):
+                        cse_var_3: T.int32 = ax1_1 * 16
+                        cse_var_2: T.int32 = cse_var_3 + ax2
+                        cse_var_1: T.int32 = ax0 * 2448 + k1 * 272 + cse_var_3 + ax2
+                        T_multiply_red_1[cse_var_2] = T_multiply_red_1[cse_var_2] + data_1[cse_var_1] * data_1[cse_var_1]
+                for ax2, ax3_s in T.grid(17, 16):
+                    cse_var_5: T.int32 = ax2 * 16
+                    cse_var_4: T.int32 = ax0 * 2448 + ax1 * 272 + cse_var_5 + ax3_s
+                    T_cast_1 = T.Buffer((34272,), data=T_cast.data)
+                    T_cast_1[cse_var_4] = data_1[cse_var_4] * weight[ax1] * T.rsqrt(T_multiply_red_1[cse_var_5 + ax3_s] * T.float32(0.1111111111111111) + T.float32(1.0000000000000001e-05))

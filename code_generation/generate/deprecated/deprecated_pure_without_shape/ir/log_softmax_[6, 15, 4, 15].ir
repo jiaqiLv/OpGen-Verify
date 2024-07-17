@@ -1,0 +1,26 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((6, 15, 4, 15), "float32"), compute: T.Buffer((6, 15, 4, 15), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused in T.parallel(600):
+            T_softmax_maxelem = T.allocate([3], "float32", "global")
+            compute_1 = T.allocate([3], "float32", "global")
+            T_softmax_maxelem_1 = T.Buffer((3,), data=T_softmax_maxelem, align=8)
+            data_1 = T.Buffer((5400,), data=data.data)
+            for i1 in range(3):
+                T_softmax_maxelem_1[i1] = T.float32(-3.4028234663852886e+38)
+                for k in range(15):
+                    T_softmax_maxelem_1[i1] = T.max(T_softmax_maxelem_1[i1], data_1[i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused // 200 * 1800 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused % 10 * 180 + i1 * 60 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused % 200 // 50 * 15 + k])
+            compute_2 = T.Buffer((3,), data=compute_1, align=8)
+            for i1 in range(3):
+                compute_2[i1] = T.float32(0)
+                for k in range(15):
+                    compute_2[i1] = compute_2[i1] + T.exp(data_1[i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused // 200 * 1800 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused % 10 * 180 + i1 * 60 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused % 200 // 50 * 15 + k] - T_softmax_maxelem_1[i1])
+            for i3_outer_inner, i1_inner in T.grid(3, 3):
+                cse_var_1: T.int32 = i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused // 200 * 1800 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused % 10 * 180 + i1_inner * 60 + i0_outer_outer_outer_i1_outer_outer_outer_fused_i2_outer_outer_outer_fused_i3_outer_outer_outer_fused_i0_outer_outer_inner_fused_i1_outer_outer_inner_fused_i2_outer_outer_inner_fused_i3_outer_outer_inner_fused_i0_outer_inner_fused_i1_outer_inner_fused_i2_outer_inner_fused % 200 // 10 * 3 + i3_outer_inner
+                compute_3 = T.Buffer((5400,), data=compute.data)
+                compute_3[cse_var_1] = data_1[cse_var_1] - T_softmax_maxelem_1[i1_inner] - T.log(compute_2[i1_inner])

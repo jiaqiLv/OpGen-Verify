@@ -1,0 +1,26 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(ph_0: T.Buffer((6, 1, 6), "float32"), ph_3: T.Buffer((6, 6, 5), "float32"), compute: T.Buffer((6, 1, 6), "float32"), T_batch_matmul_NN: T.Buffer((6, 1, 5), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        auto_scheduler_layout_transform = T.allocate([180], "float32", "global")
+        ph_0_1 = T.Buffer((36,), data=ph_0.data)
+        for i0_i1_fused_i2_fused in T.parallel(36):
+            compute_1 = T.Buffer((36,), data=compute.data)
+            compute_1[i0_i1_fused_i2_fused] = T.asin(ph_0_1[i0_i1_fused_i2_fused])
+        auto_scheduler_layout_transform_1 = T.Buffer((180,), data=auto_scheduler_layout_transform)
+        for ax0_ax1_fused_ax2_fused in T.parallel(3):
+            for ax5, ax6, ax7 in T.grid(2, 5, 6):
+                cse_var_1: T.int32 = ax0_ax1_fused_ax2_fused * 60 + ax5 * 30
+                ph_3_1 = T.Buffer((180,), data=ph_3.data)
+                auto_scheduler_layout_transform_1[cse_var_1 + ax6 * 6 + ax7] = ph_3_1[cse_var_1 + ax7 * 5 + ax6]
+        for b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused in T.parallel(3):
+            T_batch_matmul_NN_1 = T.Buffer((30,), data=T_batch_matmul_NN.data)
+            for b_outer_inner_init, j_outer_inner_init in T.grid(2, 5):
+                T_batch_matmul_NN_1[b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused * 10 + b_outer_inner_init * 5 + j_outer_inner_init] = T.float32(0)
+            for b_outer_inner, j_outer_inner, k_inner in T.grid(2, 5, 6):
+                cse_var_2: T.int32 = b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused * 10 + b_outer_inner * 5 + j_outer_inner
+                T_batch_matmul_NN_1[cse_var_2] = T_batch_matmul_NN_1[cse_var_2] + ph_0_1[b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused * 12 + b_outer_inner * 6 + k_inner] * auto_scheduler_layout_transform_1[b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused * 60 + b_outer_inner * 30 + j_outer_inner * 6 + k_inner]

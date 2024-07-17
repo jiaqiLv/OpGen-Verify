@@ -1,0 +1,13 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((13, 6, 1, 11), "float32"), depth_to_space: T.Buffer((13, 1, 2, 22), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for i0_i1_fused_i2_fused in T.parallel(26):
+            for i3 in range(22):
+                depth_to_space_1 = T.Buffer((572,), data=depth_to_space.data)
+                data_1 = T.Buffer((858,), data=data.data)
+                depth_to_space_1[i0_i1_fused_i2_fused * 22 + i3] = data_1[i0_i1_fused_i2_fused // 2 * 66 + i0_i1_fused_i2_fused % 2 * 22 + T.truncmod(i3, 2) * 11 + T.Div(i3, 2)]

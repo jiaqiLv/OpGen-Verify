@@ -1,0 +1,33 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(ph_0: T.Buffer((4, 7, 13), "float32"), ph_3: T.Buffer((4, 7, 13), "float32"), ph_9: T.Buffer((4, 13, 5), "float32"), compute: T.Buffer((4, 7, 13), "float32"), compute_1: T.Buffer((4, 7, 13), "float32"), T_add: T.Buffer((4, 7, 13), "float32"), T_batch_matmul_NN: T.Buffer((4, 7, 5), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        auto_scheduler_layout_transform = T.allocate([260], "float32", "global")
+        ph_0_1 = T.Buffer((364,), data=ph_0.data)
+        for i0_i1_fused_i2_fused in T.parallel(364):
+            compute_2 = T.Buffer((364,), data=compute.data)
+            compute_2[i0_i1_fused_i2_fused] = T.acosh(ph_0_1[i0_i1_fused_i2_fused])
+        for i0_i1_fused_i2_fused in T.parallel(364):
+            compute_2 = T.Buffer((364,), data=compute_1.data)
+            compute_2[i0_i1_fused_i2_fused] = T.asinh(T.acosh(ph_0_1[i0_i1_fused_i2_fused]))
+        for ax0_ax1_fused_ax2_fused in T.parallel(364):
+            T_add_1 = T.Buffer((364,), data=T_add.data)
+            T_add_1[ax0_ax1_fused_ax2_fused] = T.acosh(ph_0_1[ax0_ax1_fused_ax2_fused]) + ph_0_1[ax0_ax1_fused_ax2_fused]
+        auto_scheduler_layout_transform_1 = T.Buffer((260,), data=auto_scheduler_layout_transform)
+        for ax0_ax1_fused_ax2_fused in T.parallel(5):
+            for ax4, ax5, ax8 in T.grid(13, 2, 2):
+                ph_9_1 = T.Buffer((260,), data=ph_9.data)
+                auto_scheduler_layout_transform_1[ax0_ax1_fused_ax2_fused * 52 + ax4 * 4 + ax5 * 2 + ax8] = ph_9_1[ax5 * 130 + ax8 * 65 + ax4 * 5 + ax0_ax1_fused_ax2_fused]
+        for b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused in T.parallel(5):
+            T_batch_matmul_NN_1 = T.Buffer((140,), data=T_batch_matmul_NN.data)
+            for b_outer_inner_init, b_inner_init, i_inner_init in T.grid(2, 2, 7):
+                T_batch_matmul_NN_1[b_outer_inner_init * 70 + b_inner_init * 35 + i_inner_init * 5 + b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused] = T.float32(0)
+            for k_outer, b_outer_inner, b_inner, i_inner in T.grid(13, 2, 2, 7):
+                cse_var_2: T.int32 = b_outer_inner * 70 + b_inner * 35 + i_inner * 5 + b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused
+                cse_var_1: T.int32 = b_outer_inner * 182 + b_inner * 91 + i_inner * 13 + k_outer
+                ph_3_1 = T.Buffer((364,), data=ph_3.data)
+                T_batch_matmul_NN_1[cse_var_2] = T_batch_matmul_NN_1[cse_var_2] + T.truncmod(ph_0_1[cse_var_1], ph_3_1[cse_var_1]) * auto_scheduler_layout_transform_1[b_outer_outer_outer_i_outer_outer_outer_fused_j_outer_outer_outer_fused_b_outer_outer_inner_fused_i_outer_outer_inner_fused_j_outer_outer_inner_fused * 52 + k_outer * 4 + b_outer_inner * 2 + b_inner]

@@ -1,0 +1,20 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((7, 14, 8, 11), "float32"), weight: T.Buffer((11,), "float32"), T_cast: T.Buffer((7, 14, 8, 11), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0_ax1_fused_ax2_fused in T.parallel(784):
+            T_multiply_red = T.allocate([1], "float32", "global")
+            for ax3 in range(11):
+                cse_var_1: T.int32 = ax0_ax1_fused_ax2_fused * 11 + ax3
+                T_multiply_red_1 = T.Buffer((1,), data=T_multiply_red, align=4)
+                T_multiply_red_1[0] = T.float32(0)
+                data_1 = T.Buffer((8624,), data=data.data)
+                for k1 in range(14):
+                    cse_var_2: T.int32 = ax0_ax1_fused_ax2_fused // 112 * 1232 + k1 * 88 + ax0_ax1_fused_ax2_fused % 8 * 11 + ax3
+                    T_multiply_red_1[0] = T_multiply_red_1[0] + data_1[cse_var_2] * data_1[cse_var_2]
+                T_cast_1 = T.Buffer((8624,), data=T_cast.data)
+                T_cast_1[cse_var_1] = data_1[cse_var_1] * weight[ax0_ax1_fused_ax2_fused % 112 // 8] * T.rsqrt(T_multiply_red_1[0] * T.float32(0.071428571428571425) + T.float32(1.0000000000000001e-05))

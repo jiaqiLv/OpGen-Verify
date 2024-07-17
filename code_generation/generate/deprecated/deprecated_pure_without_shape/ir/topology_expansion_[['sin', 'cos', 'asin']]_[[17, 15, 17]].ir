@@ -1,0 +1,17 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(ph_0: T.Buffer((17, 15, 17), "float32"), compute: T.Buffer((17, 15, 17), "float32"), compute_1: T.Buffer((17, 15, 17), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        ph_0_1 = T.Buffer((4335,), data=ph_0.data)
+        for i0 in T.parallel(17):
+            for i1, i2 in T.grid(15, 17):
+                cse_var_1: T.int32 = i0 * 255 + i1 * 17 + i2
+                compute_2 = T.Buffer((4335,), data=compute.data)
+                compute_2[cse_var_1] = T.sin(ph_0_1[cse_var_1])
+        for i0_i1_fused_i2_fused in T.parallel(4335):
+            compute_2 = T.Buffer((4335,), data=compute_1.data)
+            compute_2[i0_i1_fused_i2_fused] = T.asin(T.cos(ph_0_1[i0_i1_fused_i2_fused]))

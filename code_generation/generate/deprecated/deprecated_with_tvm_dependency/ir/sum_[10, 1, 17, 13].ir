@@ -1,0 +1,85 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((10, 1, 17, 13), "float32"), data_red: T.Buffer((), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        data_red_rf = T.allocate([34], "float32", "global")
+        data_red_rf_1 = T.Buffer((34,), data=data_red_rf)
+        for k0_k1_fused_k2_fused_k3_fused_inner_init in range(34):
+            data_red_rf_1[k0_k1_fused_k2_fused_k3_fused_inner_init] = T.float32(0)
+        for k0_k1_fused_k2_fused_k3_fused_outer in range(65):
+            cse_var_1: T.int32 = k0_k1_fused_k2_fused_k3_fused_outer * 34
+            data_1 = T.Buffer((2210,), data=data.data)
+            data_red_rf_1[0] = data_red_rf_1[0] + data_1[cse_var_1]
+            data_red_rf_1[1] = data_red_rf_1[1] + data_1[cse_var_1 + 1]
+            data_red_rf_1[2] = data_red_rf_1[2] + data_1[cse_var_1 + 2]
+            data_red_rf_1[3] = data_red_rf_1[3] + data_1[cse_var_1 + 3]
+            data_red_rf_1[4] = data_red_rf_1[4] + data_1[cse_var_1 + 4]
+            data_red_rf_1[5] = data_red_rf_1[5] + data_1[cse_var_1 + 5]
+            data_red_rf_1[6] = data_red_rf_1[6] + data_1[cse_var_1 + 6]
+            data_red_rf_1[7] = data_red_rf_1[7] + data_1[cse_var_1 + 7]
+            data_red_rf_1[8] = data_red_rf_1[8] + data_1[cse_var_1 + 8]
+            data_red_rf_1[9] = data_red_rf_1[9] + data_1[cse_var_1 + 9]
+            data_red_rf_1[10] = data_red_rf_1[10] + data_1[cse_var_1 + 10]
+            data_red_rf_1[11] = data_red_rf_1[11] + data_1[cse_var_1 + 11]
+            data_red_rf_1[12] = data_red_rf_1[12] + data_1[cse_var_1 + 12]
+            data_red_rf_1[13] = data_red_rf_1[13] + data_1[cse_var_1 + 13]
+            data_red_rf_1[14] = data_red_rf_1[14] + data_1[cse_var_1 + 14]
+            data_red_rf_1[15] = data_red_rf_1[15] + data_1[cse_var_1 + 15]
+            data_red_rf_1[16] = data_red_rf_1[16] + data_1[cse_var_1 + 16]
+            data_red_rf_1[17] = data_red_rf_1[17] + data_1[cse_var_1 + 17]
+            data_red_rf_1[18] = data_red_rf_1[18] + data_1[cse_var_1 + 18]
+            data_red_rf_1[19] = data_red_rf_1[19] + data_1[cse_var_1 + 19]
+            data_red_rf_1[20] = data_red_rf_1[20] + data_1[cse_var_1 + 20]
+            data_red_rf_1[21] = data_red_rf_1[21] + data_1[cse_var_1 + 21]
+            data_red_rf_1[22] = data_red_rf_1[22] + data_1[cse_var_1 + 22]
+            data_red_rf_1[23] = data_red_rf_1[23] + data_1[cse_var_1 + 23]
+            data_red_rf_1[24] = data_red_rf_1[24] + data_1[cse_var_1 + 24]
+            data_red_rf_1[25] = data_red_rf_1[25] + data_1[cse_var_1 + 25]
+            data_red_rf_1[26] = data_red_rf_1[26] + data_1[cse_var_1 + 26]
+            data_red_rf_1[27] = data_red_rf_1[27] + data_1[cse_var_1 + 27]
+            data_red_rf_1[28] = data_red_rf_1[28] + data_1[cse_var_1 + 28]
+            data_red_rf_1[29] = data_red_rf_1[29] + data_1[cse_var_1 + 29]
+            data_red_rf_1[30] = data_red_rf_1[30] + data_1[cse_var_1 + 30]
+            data_red_rf_1[31] = data_red_rf_1[31] + data_1[cse_var_1 + 31]
+            data_red_rf_1[32] = data_red_rf_1[32] + data_1[cse_var_1 + 32]
+            data_red_rf_1[33] = data_red_rf_1[33] + data_1[cse_var_1 + 33]
+        data_red_1 = T.Buffer((1,), data=data_red.data)
+        data_red_1[0] = T.float32(0)
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[0]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[1]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[2]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[3]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[4]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[5]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[6]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[7]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[8]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[9]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[10]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[11]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[12]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[13]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[14]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[15]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[16]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[17]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[18]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[19]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[20]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[21]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[22]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[23]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[24]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[25]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[26]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[27]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[28]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[29]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[30]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[31]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[32]
+        data_red_1[0] = data_red_1[0] + data_red_rf_1[33]

@@ -1,0 +1,22 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((19, 20, 2, 10), "float32"), weight: T.Buffer((10,), "float32"), T_cast: T.Buffer((19, 20, 2, 10), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0 in T.parallel(19):
+            T_multiply_red = T.allocate([10], "float32", "global")
+            for ax1, ax2 in T.grid(20, 2):
+                T_multiply_red_1 = T.Buffer((10,), data=T_multiply_red, align=32)
+                data_1 = T.Buffer((7600,), data=data.data)
+                for ax2_1 in range(10):
+                    T_multiply_red_1[ax2_1] = T.float32(0)
+                    for k1 in range(20):
+                        cse_var_1: T.int32 = ax0 * 400 + k1 * 20 + ax2 * 10 + ax2_1
+                        T_multiply_red_1[ax2_1] = T_multiply_red_1[ax2_1] + data_1[cse_var_1] * data_1[cse_var_1]
+                for ax3 in range(10):
+                    cse_var_2: T.int32 = ax0 * 400 + ax1 * 20 + ax2 * 10 + ax3
+                    T_cast_1 = T.Buffer((7600,), data=T_cast.data)
+                    T_cast_1[cse_var_2] = data_1[cse_var_2] * weight[ax1] * T.rsqrt(T_multiply_red_1[ax3] * T.float32(0.050000000000000003) + T.float32(1.0000000000000001e-05))

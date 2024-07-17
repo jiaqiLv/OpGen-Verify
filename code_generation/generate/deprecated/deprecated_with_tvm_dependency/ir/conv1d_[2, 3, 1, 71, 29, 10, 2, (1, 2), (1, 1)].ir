@@ -1,0 +1,89 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((2, 3, 10), "float32"), kernel: T.Buffer((5, 3, 3), "float32"), conv1d_ncw: T.Buffer((2, 5, 4), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        conv1d_ncw_local = T.allocate([40], "float32", "local")
+        conv1d_ncw_local_1 = T.Buffer((40,), data=conv1d_ncw_local, scope="local")
+        for yy_c_outer_outer_inner in range(2):
+            cse_var_1: T.int32 = yy_c_outer_outer_inner * 2
+            conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 4:cse_var_1 + 4 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 8:cse_var_1 + 8 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 12:cse_var_1 + 12 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 16:cse_var_1 + 16 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 20:cse_var_1 + 20 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 24:cse_var_1 + 24 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 28:cse_var_1 + 28 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 32:cse_var_1 + 32 + 2] = T.Broadcast(T.float32(0), 2)
+            conv1d_ncw_local_1[cse_var_1 + 36:cse_var_1 + 36 + 2] = T.Broadcast(T.float32(0), 2)
+            for rc_inner in range(3):
+                cse_var_31: T.int32 = rc_inner * 3
+                cse_var_30: T.int32 = cse_var_1 + 8
+                cse_var_29: T.int32 = cse_var_1 + 4
+                cse_var_28: T.int32 = cse_var_1 + 36
+                cse_var_27: T.int32 = cse_var_1 + 32
+                cse_var_26: T.int32 = cse_var_1 + 28
+                cse_var_25: T.int32 = cse_var_1 + 24
+                cse_var_24: T.int32 = cse_var_1 + 20
+                cse_var_23: T.int32 = cse_var_1 + 16
+                cse_var_22: T.int32 = cse_var_1 + 12
+                cse_var_21: T.int32 = cse_var_31 + 9
+                cse_var_20: T.int32 = cse_var_31 + 38
+                cse_var_19: T.int32 = cse_var_31 + 37
+                cse_var_18: T.int32 = cse_var_31 + 36
+                cse_var_17: T.int32 = cse_var_31 + 29
+                cse_var_16: T.int32 = cse_var_31 + 28
+                cse_var_15: T.int32 = cse_var_31 + 27
+                cse_var_14: T.int32 = cse_var_31 + 20
+                cse_var_13: T.int32 = cse_var_31 + 2
+                cse_var_12: T.int32 = cse_var_31 + 19
+                cse_var_11: T.int32 = cse_var_31 + 18
+                cse_var_10: T.int32 = cse_var_31 + 11
+                cse_var_9: T.int32 = cse_var_31 + 10
+                cse_var_8: T.int32 = cse_var_31 + 1
+                cse_var_7: T.int32 = rc_inner * 10 + yy_c_outer_outer_inner * 4
+                cse_var_6: T.int32 = cse_var_7 + 32
+                cse_var_5: T.int32 = cse_var_7 + 31
+                cse_var_4: T.int32 = cse_var_7 + 30
+                cse_var_3: T.int32 = cse_var_7 + 2
+                cse_var_2: T.int32 = cse_var_7 + 1
+                data_1 = T.Buffer((60,), data=data.data)
+                kernel_1 = T.Buffer((45,), data=kernel.data)
+                conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] = conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] + data_1[cse_var_7:cse_var_7 + 4:2] * T.Broadcast(kernel_1[cse_var_31], 2)
+                conv1d_ncw_local_1[cse_var_29:cse_var_29 + 2] = conv1d_ncw_local_1[cse_var_29:cse_var_29 + 2] + data_1[cse_var_7:cse_var_7 + 4:2] * T.Broadcast(kernel_1[cse_var_21], 2)
+                conv1d_ncw_local_1[cse_var_30:cse_var_30 + 2] = conv1d_ncw_local_1[cse_var_30:cse_var_30 + 2] + data_1[cse_var_7:cse_var_7 + 4:2] * T.Broadcast(kernel_1[cse_var_11], 2)
+                conv1d_ncw_local_1[cse_var_22:cse_var_22 + 2] = conv1d_ncw_local_1[cse_var_22:cse_var_22 + 2] + data_1[cse_var_7:cse_var_7 + 4:2] * T.Broadcast(kernel_1[cse_var_15], 2)
+                conv1d_ncw_local_1[cse_var_23:cse_var_23 + 2] = conv1d_ncw_local_1[cse_var_23:cse_var_23 + 2] + data_1[cse_var_7:cse_var_7 + 4:2] * T.Broadcast(kernel_1[cse_var_18], 2)
+                conv1d_ncw_local_1[cse_var_24:cse_var_24 + 2] = conv1d_ncw_local_1[cse_var_24:cse_var_24 + 2] + data_1[cse_var_4:cse_var_4 + 4:2] * T.Broadcast(kernel_1[cse_var_31], 2)
+                conv1d_ncw_local_1[cse_var_25:cse_var_25 + 2] = conv1d_ncw_local_1[cse_var_25:cse_var_25 + 2] + data_1[cse_var_4:cse_var_4 + 4:2] * T.Broadcast(kernel_1[cse_var_21], 2)
+                conv1d_ncw_local_1[cse_var_26:cse_var_26 + 2] = conv1d_ncw_local_1[cse_var_26:cse_var_26 + 2] + data_1[cse_var_4:cse_var_4 + 4:2] * T.Broadcast(kernel_1[cse_var_11], 2)
+                conv1d_ncw_local_1[cse_var_27:cse_var_27 + 2] = conv1d_ncw_local_1[cse_var_27:cse_var_27 + 2] + data_1[cse_var_4:cse_var_4 + 4:2] * T.Broadcast(kernel_1[cse_var_15], 2)
+                conv1d_ncw_local_1[cse_var_28:cse_var_28 + 2] = conv1d_ncw_local_1[cse_var_28:cse_var_28 + 2] + data_1[cse_var_4:cse_var_4 + 4:2] * T.Broadcast(kernel_1[cse_var_18], 2)
+                conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] = conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] + data_1[cse_var_2:cse_var_2 + 4:2] * T.Broadcast(kernel_1[cse_var_8], 2)
+                conv1d_ncw_local_1[cse_var_29:cse_var_29 + 2] = conv1d_ncw_local_1[cse_var_29:cse_var_29 + 2] + data_1[cse_var_2:cse_var_2 + 4:2] * T.Broadcast(kernel_1[cse_var_9], 2)
+                conv1d_ncw_local_1[cse_var_30:cse_var_30 + 2] = conv1d_ncw_local_1[cse_var_30:cse_var_30 + 2] + data_1[cse_var_2:cse_var_2 + 4:2] * T.Broadcast(kernel_1[cse_var_12], 2)
+                conv1d_ncw_local_1[cse_var_22:cse_var_22 + 2] = conv1d_ncw_local_1[cse_var_22:cse_var_22 + 2] + data_1[cse_var_2:cse_var_2 + 4:2] * T.Broadcast(kernel_1[cse_var_16], 2)
+                conv1d_ncw_local_1[cse_var_23:cse_var_23 + 2] = conv1d_ncw_local_1[cse_var_23:cse_var_23 + 2] + data_1[cse_var_2:cse_var_2 + 4:2] * T.Broadcast(kernel_1[cse_var_19], 2)
+                conv1d_ncw_local_1[cse_var_24:cse_var_24 + 2] = conv1d_ncw_local_1[cse_var_24:cse_var_24 + 2] + data_1[cse_var_5:cse_var_5 + 4:2] * T.Broadcast(kernel_1[cse_var_8], 2)
+                conv1d_ncw_local_1[cse_var_25:cse_var_25 + 2] = conv1d_ncw_local_1[cse_var_25:cse_var_25 + 2] + data_1[cse_var_5:cse_var_5 + 4:2] * T.Broadcast(kernel_1[cse_var_9], 2)
+                conv1d_ncw_local_1[cse_var_26:cse_var_26 + 2] = conv1d_ncw_local_1[cse_var_26:cse_var_26 + 2] + data_1[cse_var_5:cse_var_5 + 4:2] * T.Broadcast(kernel_1[cse_var_12], 2)
+                conv1d_ncw_local_1[cse_var_27:cse_var_27 + 2] = conv1d_ncw_local_1[cse_var_27:cse_var_27 + 2] + data_1[cse_var_5:cse_var_5 + 4:2] * T.Broadcast(kernel_1[cse_var_16], 2)
+                conv1d_ncw_local_1[cse_var_28:cse_var_28 + 2] = conv1d_ncw_local_1[cse_var_28:cse_var_28 + 2] + data_1[cse_var_5:cse_var_5 + 4:2] * T.Broadcast(kernel_1[cse_var_19], 2)
+                conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] = conv1d_ncw_local_1[cse_var_1:cse_var_1 + 2] + data_1[cse_var_3:cse_var_3 + 4:2] * T.Broadcast(kernel_1[cse_var_13], 2)
+                conv1d_ncw_local_1[cse_var_29:cse_var_29 + 2] = conv1d_ncw_local_1[cse_var_29:cse_var_29 + 2] + data_1[cse_var_3:cse_var_3 + 4:2] * T.Broadcast(kernel_1[cse_var_10], 2)
+                conv1d_ncw_local_1[cse_var_30:cse_var_30 + 2] = conv1d_ncw_local_1[cse_var_30:cse_var_30 + 2] + data_1[cse_var_3:cse_var_3 + 4:2] * T.Broadcast(kernel_1[cse_var_14], 2)
+                conv1d_ncw_local_1[cse_var_22:cse_var_22 + 2] = conv1d_ncw_local_1[cse_var_22:cse_var_22 + 2] + data_1[cse_var_3:cse_var_3 + 4:2] * T.Broadcast(kernel_1[cse_var_17], 2)
+                conv1d_ncw_local_1[cse_var_23:cse_var_23 + 2] = conv1d_ncw_local_1[cse_var_23:cse_var_23 + 2] + data_1[cse_var_3:cse_var_3 + 4:2] * T.Broadcast(kernel_1[cse_var_20], 2)
+                conv1d_ncw_local_1[cse_var_24:cse_var_24 + 2] = conv1d_ncw_local_1[cse_var_24:cse_var_24 + 2] + data_1[cse_var_6:cse_var_6 + 4:2] * T.Broadcast(kernel_1[cse_var_13], 2)
+                conv1d_ncw_local_1[cse_var_25:cse_var_25 + 2] = conv1d_ncw_local_1[cse_var_25:cse_var_25 + 2] + data_1[cse_var_6:cse_var_6 + 4:2] * T.Broadcast(kernel_1[cse_var_10], 2)
+                conv1d_ncw_local_1[cse_var_26:cse_var_26 + 2] = conv1d_ncw_local_1[cse_var_26:cse_var_26 + 2] + data_1[cse_var_6:cse_var_6 + 4:2] * T.Broadcast(kernel_1[cse_var_14], 2)
+                conv1d_ncw_local_1[cse_var_27:cse_var_27 + 2] = conv1d_ncw_local_1[cse_var_27:cse_var_27 + 2] + data_1[cse_var_6:cse_var_6 + 4:2] * T.Broadcast(kernel_1[cse_var_17], 2)
+                conv1d_ncw_local_1[cse_var_28:cse_var_28 + 2] = conv1d_ncw_local_1[cse_var_28:cse_var_28 + 2] + data_1[cse_var_6:cse_var_6 + 4:2] * T.Broadcast(kernel_1[cse_var_20], 2)
+        for nn_inner, ff_inner in T.grid(2, 5):
+            cse_var_32: T.int32 = nn_inner * 20 + ff_inner * 4
+            conv1d_ncw_1 = T.Buffer((40,), data=conv1d_ncw.data)
+            conv1d_ncw_1[cse_var_32:cse_var_32 + 4] = conv1d_ncw_local_1[cse_var_32:cse_var_32 + 4]

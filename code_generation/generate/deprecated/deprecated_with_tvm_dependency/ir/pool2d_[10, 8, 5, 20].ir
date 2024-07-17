@@ -1,0 +1,39 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((10, 8, 5, 60), "float32"), pool_max: T.Buffer((10, 8, 3, 30), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0_ax1_fused_ax2_fused in T.parallel(240):
+            pad_temp = T.allocate([9], "float32", "global")
+            for ax3 in range(30):
+                cse_var_6: T.int32 = ax0_ax1_fused_ax2_fused % 3
+                cse_var_5: T.bool = 1 <= ax3
+                cse_var_4: T.bool = cse_var_6 < 2
+                cse_var_3: T.bool = 1 <= cse_var_6
+                cse_var_2: T.int32 = ax0_ax1_fused_ax2_fused * 30 + ax3
+                cse_var_1: T.int32 = ax0_ax1_fused_ax2_fused // 3 * 300 + cse_var_6 * 120 + ax3 * 2
+                pad_temp_1 = T.Buffer((9,), data=pad_temp, align=32)
+                data_1 = T.Buffer((24000,), data=data.data)
+                pad_temp_1[0] = T.if_then_else(cse_var_3 and cse_var_5, data_1[cse_var_1 - 61], T.float32(-3.4028234663852886e+38))
+                pad_temp_1[1] = T.if_then_else(cse_var_3, data_1[cse_var_1 - 60], T.float32(-3.4028234663852886e+38))
+                pad_temp_1[2] = T.if_then_else(cse_var_3, data_1[cse_var_1 - 59], T.float32(-3.4028234663852886e+38))
+                pad_temp_1[3] = T.if_then_else(cse_var_5, data_1[cse_var_1 - 1], T.float32(-3.4028234663852886e+38))
+                pad_temp_1[4] = data_1[cse_var_1]
+                pad_temp_1[5] = data_1[cse_var_1 + 1]
+                pad_temp_1[6] = T.if_then_else(cse_var_4 and cse_var_5, data_1[cse_var_1 + 59], T.float32(-3.4028234663852886e+38))
+                pad_temp_1[7] = T.if_then_else(cse_var_4, data_1[cse_var_1 + 60], T.float32(-3.4028234663852886e+38))
+                pad_temp_1[8] = T.if_then_else(cse_var_4, data_1[cse_var_1 + 61], T.float32(-3.4028234663852886e+38))
+                pool_max_1 = T.Buffer((7200,), data=pool_max.data)
+                pool_max_1[cse_var_2] = T.float32(-3.4028234663852886e+38)
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[0])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[1])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[2])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[3])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[4])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[5])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[6])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[7])
+                pool_max_1[cse_var_2] = T.max(pool_max_1[cse_var_2], pad_temp_1[8])

@@ -21,7 +21,7 @@ ARGS_PARAM_DICT = {'topi':['N','C','H','W'],
                    'nn':['N','C','H','W'],
                    'conv':['N','H','W','CO','CI','KH','KW','strides','padding']}
 
-def generate_single_code(ops,max_attempts=1):
+def generate_single_code(ops,max_attempts=10):
     print(ops.__name__)
     code_gen = CodeGen(search_time=10,log_file_path='./generate/log',verbose_key=False)
     args_gen = ArgsGen(param_list=ARGS_PARAM_DICT[args.op_type])
