@@ -203,10 +203,10 @@ def scale_shift_nchw(N,C, H, W):
     data = te.placeholder((N,C,H,W), name="data", dtype="float32")
     # 创建缩放因子张量
     scale_shape = (C,)  # 与通道数相同
-    Scale = te.placeholder(scale_shape, name="Scale", dtype="float32")
+    Scale = te.placeholder(scale_shape, name="data_Scale", dtype="float32")
     # 创建偏移量张量
     shift_shape = (C,)  
-    Shift = te.placeholder(shift_shape, name="Shift", dtype="float32")
+    Shift = te.placeholder(shift_shape, name="data_Shift", dtype="float32")
     out = topi.nn.scale_shift_nchw(data, Scale, Shift)
     return [data,Scale, Shift,out]
 
@@ -216,7 +216,7 @@ def prelu(N,C, H, W):
     data = te.placeholder((N,C,H,W), name="data", dtype="float32")
     # 创建缩放因子张量
     slope_shape = (W,)  
-    slope = te.placeholder(slope_shape, name="Scale", dtype="float32")
+    slope = te.placeholder(slope_shape, name="data_Scale", dtype="float32")
     out = topi.nn.prelu(data, slope,axis=3)
     return [data,slope,out]
 
@@ -226,10 +226,10 @@ def scale_shift_nchwc(N,C, H, W):
     data = te.placeholder((N,2,H,W,C), name="data", dtype="float32")
     # 创建缩放因子张量
     scale_shape = (2,C,)  # 与通道数相同
-    Scale = te.placeholder(scale_shape, name="Scale", dtype="float32")
+    Scale = te.placeholder(scale_shape, name="data_Scale", dtype="float32")
     # 创建偏移量张量
     shift_shape = (2,C,)  
-    Shift = te.placeholder(shift_shape, name="Shift", dtype="float32")
+    Shift = te.placeholder(shift_shape, name="data_Shift", dtype="float32")
     out = topi.nn.scale_shift_nchwc(data, Scale, Shift)
     return [data,Scale, Shift,out]
 
@@ -260,7 +260,7 @@ def space_to_depth(N,C, H, W):
 def strided_slice(N,C, H, W):
 
     data_shape = (C,H,W)  # 输入张量的形状
-    a = te.placeholder(data_shape, name="a", dtype="float32")
+    a = te.placeholder(data_shape, name="data_a", dtype="float32")
 
     # 定义切片参数
     begin = [1, 2, 3]  # 开始位置
@@ -276,7 +276,7 @@ def strided_slice(N,C, H, W):
 @auto_scheduler.register_workload
 def unpack_NCHWc_to_nchw(N,C, H, W):
     packed_out_shape = (N, C, H, W, 2)  # 输入张量的形状，包括批量大小、通道数、高度、宽度和每个通道的元素数
-    packed_out = te.placeholder(packed_out_shape, name="packed_out", dtype="float32")
+    packed_out = te.placeholder(packed_out_shape, name="data_packed_out", dtype="float32")
     # 指定输出的数据类型
     out_dtype = "float32"  # 输出张量的数据类型
 
@@ -304,7 +304,7 @@ def rms_norm(N,C, H, W):
     data_shape = (N,C,H, W)  # 输入张量的形状，包括批量大小、通道数、高度和宽度
     data = te.placeholder(data_shape, name="data", dtype="float32")
     weight_shape = (W,)  # 权重的形状，与通道数相同
-    weight = te.placeholder(weight_shape, name="weight", dtype="float32")
+    weight = te.placeholder(weight_shape, name="data_weight", dtype="float32")
     axis = (1,)
     epsilon = 1e-5
     # 调用 tvm.topi.nn.rms_norm 函数进行 rms 归一化操作
@@ -318,17 +318,17 @@ def bitserial_dense(N,C,H,W):
     kh = (H%10) * 8 
     kc = (C%10) * 8 
     data = te.placeholder((C, kw), name='data', dtype='uint32')
-    weight = te.placeholder((kh, kw), name='weight', dtype='uint32')
+    weight = te.placeholder((kh, kw), name='data_weight', dtype='uint32')
     conv = topi.nn.bitserial_dense(data, weight ,8,8)
     return [data, weight, conv]
 
 @auto_scheduler.register_workload
 def batch_norm(N,C,H,W):
     data = te.placeholder((N, C, H, W), name='data')
-    gamma = te.placeholder((C,), name='gamma')
-    beta = te.placeholder((C,), name='beta')
-    moving_mean = te.placeholder((C,), name='moving_mean')
-    moving_var = te.placeholder((C,), name='moving_var')
+    gamma = te.placeholder((C,), name='data_gamma')
+    beta = te.placeholder((C,), name='data_beta')
+    moving_mean = te.placeholder((C,), name='data_moving_mean')
+    moving_var = te.placeholder((C,), name='data_moving_var')
 
     axis = 1  # 通常 batch_norm 的轴为通道轴，即 axis=1
     epsilon = 1e-5  # 设定一个很小的数作为 epsilon

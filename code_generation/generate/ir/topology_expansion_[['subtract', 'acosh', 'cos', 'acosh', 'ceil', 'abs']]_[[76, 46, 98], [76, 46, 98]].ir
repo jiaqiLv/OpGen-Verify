@@ -1,0 +1,26 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(ph_0: T.Buffer((76, 46, 98), "float32"), ph_3: T.Buffer((76, 46, 98), "float32"), compute_6: T.Buffer((76, 46, 98), "float32"), compute_10: T.Buffer((76, 46, 98), "float32"), compute_12: T.Buffer((76, 46, 98), "float32"), compute_14: T.Buffer((76, 46, 98), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        ph_0_1 = T.Buffer((342608,), data=ph_0.data)
+        for i0_i1_fused in T.parallel(3496):
+            for i2 in range(98):
+                cse_var_1: T.int32 = i0_i1_fused * 98 + i2
+                compute_6_1 = T.Buffer((342608,), data=compute_6.data)
+                compute_6_1[cse_var_1] = T.acosh(ph_0_1[cse_var_1])
+        for i0_i1_fused_i2_fused in T.parallel(342608):
+            compute_10_1 = T.Buffer((342608,), data=compute_10.data)
+            compute_10_1[i0_i1_fused_i2_fused] = T.acosh(T.cos(ph_0_1[i0_i1_fused_i2_fused]))
+        for i0_i1_fused in T.parallel(3496):
+            for i2 in range(98):
+                cse_var_2: T.int32 = i0_i1_fused * 98 + i2
+                compute_12_1 = T.Buffer((342608,), data=compute_12.data)
+                compute_12_1[cse_var_2] = T.ceil(T.cos(ph_0_1[cse_var_2]))
+        for i0_i1_fused_i2_fused in T.parallel(342608):
+            compute_14_1 = T.Buffer((342608,), data=compute_14.data)
+            ph_3_1 = T.Buffer((342608,), data=ph_3.data)
+            compute_14_1[i0_i1_fused_i2_fused] = T.fabs(ph_0_1[i0_i1_fused_i2_fused] - ph_3_1[i0_i1_fused_i2_fused])

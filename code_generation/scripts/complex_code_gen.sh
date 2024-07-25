@@ -9,7 +9,7 @@ TIMEOUT=3600
 
 retries=0
 
-OP_NUM=2
+OP_NUM=6
 
 EXECUTE_NUM=300
 

@@ -147,8 +147,10 @@ class OpGraph:
                 _tensor_list = []
                 for _tensor in target_node.input_tensors:
                     _tensor_list.append(_tensor['value'])
-                # print('_tensor_list(ready to compute):', _tensor_list)
+                # FIXME: 如何设置out的name
                 out = target_node.func_call(*_tensor_list)
+                out.set_name(f'{out.name}_{self.counter}')
+                self.counter += 1
                 target_node.set_output(out)
         # Fill with real data
         # print('@@@@@---->',source_node.node_id,target_node.node_id)

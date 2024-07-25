@@ -320,12 +320,12 @@ def tile(N,C, H, W):
     return [data,out]
 
 
-@auto_scheduler.register_workload
-def matmul(N,C,H,W):
-    data_a = te.placeholder((H,W),name="left_matrix",dtype='float32')
-    data_b = te.placeholder((W,H),name='right_matrix',dtype='float32')
-    out = topi.matmul(data_a,data_b)
-    return [data_a,data_b,out]
+# @auto_scheduler.register_workload
+# def matmul(N,C,H,W):
+#     data_a = te.placeholder((H,W),name="left_matrix",dtype='float32')
+#     data_b = te.placeholder((W,H),name='right_matrix',dtype='float32')
+#     out = topi.matmul(data_a,data_b)
+#     return [data_a,data_b,out]
 
 """test combination ops"""
 
@@ -354,7 +354,7 @@ def abs_simple(data):
     return [data,out]
 
 
-TOPI_OPS_LIST = [matmul,multi_out_op,combination_op,abs_simple,
+TOPI_OPS_LIST = [multi_out_op,combination_op,abs_simple,
                  abs,cos,atan,clip,sum,cosh,acos,asin,asinh,atanh,ceil,
                  const_vector,const_vector,const_vector,const_vector,erf,exp,fast_erf,fast_exp,fast_tanh,fixed_point_multiply,
                  flip,floor,full_like,isnan,log,log10,log2,max,min,negative,

@@ -7,8 +7,8 @@ import tvm
 @auto_scheduler.register_workload
 def conv2d_nchw(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N, CI, H, W), name="data")
-    kernel = te.placeholder((CO, CI, KH, KW), name="kernel")
-    bias = te.placeholder((1, CO, 1, 1), name="bias")
+    kernel = te.placeholder((CO, CI, KH, KW), name="data_kernel")
+    bias = te.placeholder((1, CO, 1, 1), name="data_bias")
     conv = topi.nn.conv2d_nchw(data, kernel, stride, padding, dilation=1, out_dtype="float32")
     return [data, kernel, bias, conv]
 
@@ -16,7 +16,7 @@ def conv2d_nchw(N, H, W, CO, CI, KH, KW, stride, padding):
 @auto_scheduler.register_workload
 def conv2d(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N,CI,H,W), name='data', dtype='float32')
-    kernel = te.placeholder((CO,CI,KH,KW), name='kernel', dtype='float32')
+    kernel = te.placeholder((CO,CI,KH,KW), name='data_kernel', dtype='float32')
     dilation = (1, 1)  
     out = tvm.topi.nn.conv2d(data, kernel, stride, padding, dilation, data_layout='NCHW', out_dtype='float32')
     return [data, kernel,  out]
@@ -25,7 +25,7 @@ def conv2d(N, H, W, CO, CI, KH, KW, stride, padding):
 @auto_scheduler.register_workload
 def conv1d(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((2,3,10), name='data', dtype='float32')
-    kernel = te.placeholder((5,3,3), name='kernel', dtype='float32')
+    kernel = te.placeholder((5,3,3), name='data_kernel', dtype='float32')
     out = topi.nn.conv1d(data, kernel, strides=2, padding='VALID', dilation=1, data_layout='NCW')
     # data = te.placeholder((N,CI,W), name='data', dtype='float32')
     # kernel = te.placeholder((CO,CI,KW), name='kernel', dtype='float32')
@@ -35,21 +35,21 @@ def conv1d(N, H, W, CO, CI, KH, KW, stride, padding):
 @auto_scheduler.register_workload
 def conv1d_ncw(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N,CI,W), name='data', dtype='float32')
-    kernel = te.placeholder((CO,KW,KW), name='kernel', dtype='float32')
+    kernel = te.placeholder((CO,KW,KW), name='data_kernel', dtype='float32')
     out = topi.nn.conv1d_ncw(data, kernel, strides=2, padding='VALID', dilation=1)
     return [data, kernel,  out]
 
 @auto_scheduler.register_workload
 def conv1d_transpose_ncw(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N,W,CI), name='data', dtype='float32')
-    kernel = te.placeholder((CO,CI,KW), name='kernel', dtype='float32')
+    kernel = te.placeholder((CO,CI,KW), name='data_kernel', dtype='float32')
     out = topi.nn.conv1d_transpose_ncw(data, kernel, stride=2, padding='VALID',out_dtype = 'float32',output_padding=0)
     return [data, kernel,  out]
 
 @auto_scheduler.register_workload
 def conv2d_gemm_weight_transform(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N, CI, H, W), name='data', dtype='float32')
-    kernel = te.placeholder((CO, CI, KH, KW), name='kernel', dtype='float32')
+    kernel = te.placeholder((CO, CI, KH, KW), name='data_kernel', dtype='float32')
     tile_N = 4
     tile_K = 16
     out = tvm.topi.nn.conv2d_gemm_weight_transform(kernel, tile_N, tile_K)
@@ -57,7 +57,7 @@ def conv2d_gemm_weight_transform(N, H, W, CO, CI, KH, KW, stride, padding):
 @auto_scheduler.register_workload
 def conv3d_ncdhw(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N, CI,CO, H, W), name="data")
-    kernel = te.placeholder((CO, CI,N, KH, KW), name="kernel")
+    kernel = te.placeholder((CO, CI,N, KH, KW), name="data_kernel")
     conv = topi.nn.conv3d_ncdhw(data, kernel, 1, 1, dilation=1, out_dtype="float32",groups=1)
     return [data, kernel, conv]
 
@@ -78,21 +78,21 @@ def conv3d_winograd_weight_transform(N, H, W, CO, CI, KH, KW, stride, padding):
 def depthwise_conv2d_nchw(N, H, W, CO, CI, KH, KW, stride, padding):
     
     data = te.placeholder((N,CI,CO,H), name='data')
-    kernel = te.placeholder((CI,CO,KH,KW), name='kernel', dtype='float32')
+    kernel = te.placeholder((CI,CO,KH,KW), name='data_kernel', dtype='float32')
     output = topi.nn.depthwise_conv2d_nchw(data, kernel,1,padding='VALID',dilation=1)
     return [data,kernel,output]
 
 @auto_scheduler.register_workload
 def depthwise_conv2d_nhwc(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N,H,CO,CI), name='data')
-    kernel = te.placeholder((KH,KW,CO), name='kernel', dtype='float32')
+    kernel = te.placeholder((KH,KW,CO), name='data_kernel', dtype='float32')
     output = topi.nn.depthwise_conv2d_nhwc(data, kernel,1,padding='VALID',dilation=1)
     return [data,kernel,output]
 
 @auto_scheduler.register_workload
 def group_conv1d_ncw(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N, CI,  W), name="data")
-    kernel = te.placeholder((CO, CI,  KW), name="kernel")
+    kernel = te.placeholder((CO, CI,  KW), name="data_kernel")
     strides = 1
     padding = 'VALID'
     dilation = 1
@@ -104,7 +104,7 @@ def group_conv1d_ncw(N, H, W, CO, CI, KH, KW, stride, padding):
 @auto_scheduler.register_workload
 def group_conv1d_nwc(N, H, W, CO, CI, KH, KW, stride, padding):
     data = te.placeholder((N,  W, CI), name="data")
-    kernel = te.placeholder((CO, CI,  KW), name="kernel")
+    kernel = te.placeholder((CO, CI,  KW), name="data_kernel")
     strides = 1
     padding = 'VALID'
     dilation = 1

@@ -43,11 +43,26 @@ def generate_single_code(ops,max_attempts=1):
         try:
             signal.alarm(args.timeout)
             # c_code, ir_code = code_gen.c_codegen_without_tune(topi_ops=ops, op_args=op_args)
-            c_code, ir_code, host_module, device_module = code_gen.c_codegen(topi_ops=ops, op_args=op_args)
+            c_code, ir_code, host_module, device_module, input_tensors_shape, output_tensors_shape, input_tensors_name, output_tensors_name = code_gen.c_codegen(topi_ops=ops, op_args=op_args)
             cuda_code = code_gen.cuda_codegen(topi_ops=ops, op_args=op_args)
             op_name = ops.__name__
-            write_ops_to_json(op_name, c_code, cuda_code, ir_code,op_args)
-            write_ops_to_file(op_name, c_code, cuda_code, ir_code, host_module, device_module, op_args)
+            write_ops_to_json(op_name, 
+                              c_code, 
+                              cuda_code, 
+                              ir_code,
+                              op_args,
+                              input_tensors_shape=input_tensors_shape,
+                              output_tensors_shape=output_tensors_shape,
+                              input_tensors_name=input_tensors_name,
+                              output_tensors_name=output_tensors_name)
+            write_ops_to_file(op_name, 
+                              c_code, 
+                              cuda_code, 
+                              ir_code, 
+                              host_module, 
+                              device_module, 
+                              op_args,
+                              input_tensors_shape=input_tensors_shape)
             attempts += 1
         except TimeoutError:
             pass

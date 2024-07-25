@@ -50,6 +50,23 @@ class CodeGen:
         # Apply the best schedule
         target_c = tvm.target.Target(target="c", host="llvm")
         sch, args = task_c.apply_best(c_log_file_path)
+        print('####--->',args)
+        """Get input and output tensor shape info"""
+        input_tensors_shape = []
+        output_tensors_shape = []
+        input_tensors_name = []
+        output_tensors_name = []
+        for arg in args:
+            if ('data' in arg.name) or ('ph' in arg.name):
+                input_tensors_shape.append(arg.shape)
+                input_tensors_name.append(arg.name)
+            else:
+                output_tensors_shape.append(arg.shape)
+                output_tensors_name.append(arg.name)
+
+        print(input_tensors_name,input_tensors_shape)
+        print(output_tensors_name,output_tensors_shape)
+
         c_module = tvm.build(sch, args, target_c)
 
         host_module = c_module
@@ -59,7 +76,7 @@ class CodeGen:
         print(c_code)
         lowered_ir = tvm.lower(sch, args, simple_mode=True)
 
-        return c_code, str(lowered_ir), host_module, device_module
+        return c_code, str(lowered_ir), host_module, device_module, input_tensors_shape, output_tensors_shape, input_tensors_name, output_tensors_name
     
     def cuda_codegen(self, topi_ops=None, op_args=None):
         if topi_ops is None:
@@ -118,15 +135,15 @@ class ArgsGen:
             padding: padding
         """
         if param_name == 'CO' or param_name == 'CI':
-            param_val = random.randint(10, 100)
+            param_val = random.randint(100, 1000)
         elif param_name == 'KH' or param_name == 'KW':
-            param_val = random.randint(1, 20)
+            param_val = random.randint(10, 50)
         elif param_name == 'strides':
-            param_val = (random.randint(1, 3), random.randint(1, 3))
+            param_val = (random.randint(10, 30), random.randint(10, 30))
         elif param_name == 'padding':
-            param_val = (random.randint(1, 1), random.randint(1, 1))
+            param_val = (random.randint(10, 10), random.randint(10, 10))
         else:
-            param_val = random.randint(1, 20)
+            param_val = random.randint(30, 100)
         return param_val
     
     def randomize_params(self):

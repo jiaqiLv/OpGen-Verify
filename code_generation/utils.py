@@ -4,25 +4,58 @@ import pandas as pd
 from OpGraph import input_shape_list,output_shape_list
 import os
 
-def write_ops_to_json(op_name, c_code, cuda_code, ir_code, op_args, save_file_path = './generate/generation.json'):
-    op_data = {
+def write_ops_to_json(op_name, 
+                      c_code, 
+                      cuda_code, 
+                      ir_code, 
+                      op_args, 
+                      save_file_path = './generate/generation.json',
+                      input_tensors_shape=None,
+                      output_tensors_shape=None,
+                      input_tensors_name=None,
+                      output_tensors_name=None):
+    if input_tensors_shape != None and output_tensors_shape != None:
+        op_data = {
         'op_name': op_name,
         'c_code': c_code,
         'cuda_code': cuda_code,
         'ir_code': ir_code,
         'op_args':op_args,
-        'input_shape':str(input_shape_list),
-        'output_shape':str(output_shape_list)
+        'input_shape':str(input_tensors_shape),
+        'output_shape':str(output_tensors_shape),
+        'input_name':input_tensors_name,
+        'output_name':output_tensors_name
     }
+    else:
+        op_data = {
+            'op_name': op_name,
+            'c_code': c_code,
+            'cuda_code': cuda_code,
+            'ir_code': ir_code,
+            'op_args':op_args,
+            'input_shape':str(input_shape_list),
+            'output_shape':str(output_shape_list)
+        }
     with open(save_file_path, 'a') as file:
         json.dump(op_data,file)
 
-def write_ops_to_file(op_name, c_code, cuda_code, ir_code, host_module, device_module, op_args, save_file_path='generate'):
+def write_ops_to_file(op_name, 
+                      c_code, 
+                      cuda_code, 
+                      ir_code, 
+                      host_module, 
+                      device_module, 
+                      op_args, 
+                      save_file_path='generate',
+                      input_tensors_shape=None):
     os.makedirs(join(save_file_path,'c'),exist_ok=True)
     os.makedirs(join(save_file_path,'ir'),exist_ok=True)
     os.makedirs(join(save_file_path,'cuda'),exist_ok=True)
     os.makedirs(join(save_file_path,'host_module'),exist_ok=True)
     os.makedirs(join(save_file_path,'device_module'),exist_ok=True)
+
+    if input_tensors_shape != None:
+        input_shape_list = input_tensors_shape
 
     with open(join(save_file_path,'c',f'{op_name}_{op_args}_{input_shape_list}.c'),'w') as file:
         file.write(c_code)

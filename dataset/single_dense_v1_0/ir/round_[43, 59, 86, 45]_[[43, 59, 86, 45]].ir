@@ -1,0 +1,14 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(data: T.Buffer((43, 59, 86, 45), "float32"), compute: T.Buffer((43, 59, 86, 45), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for i0 in T.parallel(43):
+            for i1, i2, i3 in T.grid(59, 86, 45):
+                cse_var_1: T.int32 = i0 * 228330 + i1 * 3870 + i2 * 45 + i3
+                compute_1 = T.Buffer((9818190,), data=compute.data)
+                data_1 = T.Buffer((9818190,), data=data.data)
+                compute_1[cse_var_1] = T.round(data_1[cse_var_1])

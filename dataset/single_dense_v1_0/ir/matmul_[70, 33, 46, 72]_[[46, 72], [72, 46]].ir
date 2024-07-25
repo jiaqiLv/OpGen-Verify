@@ -1,0 +1,19 @@
+# from tvm.script import ir as I
+# from tvm.script import tir as T
+
+@I.ir_module
+class Module:
+    @T.prim_func
+    def main(left_matrix: T.Buffer((46, 72), "float32"), right_matrix: T.Buffer((72, 46), "float32"), T_matmul: T.Buffer((46, 46), "float32")):
+        T.func_attr({"from_legacy_te_schedule": T.bool(True), "tir.noalias": T.bool(True)})
+        for ax0_outer_outer_outer_ax1_outer_outer_outer_fused_ax0_outer_outer_inner_fused_ax1_outer_outer_inner_fused in T.parallel(1058):
+            T_matmul_1 = T.Buffer((2116,), data=T_matmul.data)
+            for ax0_inner_init in range(2):
+                T_matmul_1[ax0_outer_outer_outer_ax1_outer_outer_outer_fused_ax0_outer_outer_inner_fused_ax1_outer_outer_inner_fused // 46 * 92 + ax0_inner_init * 46 + ax0_outer_outer_outer_ax1_outer_outer_outer_fused_ax0_outer_outer_inner_fused_ax1_outer_outer_inner_fused % 46] = T.float32(0)
+            for k_outer, k_inner, ax0_inner in T.grid(24, 3, 2):
+                cse_var_3: T.int32 = ax0_outer_outer_outer_ax1_outer_outer_outer_fused_ax0_outer_outer_inner_fused_ax1_outer_outer_inner_fused // 46
+                cse_var_2: T.int32 = ax0_outer_outer_outer_ax1_outer_outer_outer_fused_ax0_outer_outer_inner_fused_ax1_outer_outer_inner_fused % 46
+                cse_var_1: T.int32 = cse_var_3 * 92 + ax0_inner * 46 + cse_var_2
+                left_matrix_1 = T.Buffer((3312,), data=left_matrix.data)
+                right_matrix_1 = T.Buffer((3312,), data=right_matrix.data)
+                T_matmul_1[cse_var_1] = T_matmul_1[cse_var_1] + left_matrix_1[cse_var_3 * 144 + ax0_inner * 72 + k_outer * 3 + k_inner] * right_matrix_1[k_outer * 138 + k_inner * 46 + cse_var_2]
